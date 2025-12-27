@@ -1,0 +1,35 @@
+//
+//  main.cpp
+//  Essential
+//
+//  Created by M'Barek Benraiss on 17.12.25.
+//
+
+#include "array_ADT/ArrayADT.hpp"
+#include "array_ADT/ArrayMenuusing_C /ArrayMenu.h"
+
+#include <cstdlib>
+#include <iostream>
+
+int main(int argc, const char *argv[]) {
+  std::cout << "Start Program!" << '\n';
+
+  // arraysADT demo array
+  // arraysADT_demo();
+
+  // arraysMenue demo arrays
+  arraysMenu();
+
+  std::cout << "End Program!" << '\n';
+  return EXIT_SUCCESS;
+}
+
+/* run : ./build_and_run.sh
+
+
+cd Essential/Essential && clang++ -std=c++17 -o main main.cpp
+array_ADT/ArrayADT.cpp && ./main
+
+//build script
+./Essential/Essential/build_and_run.sh
+*/

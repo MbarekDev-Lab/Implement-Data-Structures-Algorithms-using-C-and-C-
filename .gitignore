@@ -1,0 +1,35 @@
+# Build artifacts
+*.o
+*.out
+*.exe
+essential_app
+essential_app.dSYM/
+*.dSYM/
+build/
+Build/
+
+# Xcode
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcworkspace/xcshareddata/
+*.xcuserstate
+*.xcuserdatad/
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# C/C++
+*.a
+*.so
+*.dylib
