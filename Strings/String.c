@@ -974,6 +974,129 @@ void demo_finfing_duplicate_characters_hashing()
 }
 
 // ============================================================================
+// BITWISE OPERATIONS, BINARY REPRESENTATION EXPLANATION
+// ============================================================================
+
+// Decimal (base 10):
+// 753 = 7×10² + 5×10¹ + 3×10⁰
+
+// Binary (base 2):
+//  101101 = 1×2⁵ + 0×2⁴ + 1×2³ + 1×2² + 0×2¹ + 1×2⁰
+
+// Example: Convert decimal 13 to binary
+// Step 1: Divide by 2 and record remainders
+// 13 ÷ 2 = 6, remainder 1
+// 6 ÷ 2 = 3, remainder 0
+// 3 ÷ 2 = 1, remainder 1
+// 1 ÷ 2 = 0, remainder 1
+// Decimal: 13
+// Binary : 00001101
+
+// Bitwise AND (&)
+/*
+    Bit A | Bit B | A & B
+    ------|-------|-------
+    0   |   0   |   0
+    0   |   1   |   0
+    1   |   0   |   0
+    1   |   1   |   1
+
+*/
+// Bitwise OR (|)
+/*
+    Bit A | Bit B | A | B
+    ------|-------|-------
+    0   |   0   |   0
+    0   |   1   |   1    ← One bit is 1
+    1   |   0   |   1    ← One bit is 1
+    1   |   1   |   1    ← Both bits are 1
+  */
+// Example usage in to_lowercase_bitwise() function above
+// str[i] |= 0x20;  // Set bit 5 → lowercase
+
+// Bitwise XOR (^)
+/*
+    Bit A | Bit B | A ^ B
+    ------|-------|-------
+    0   |   0   |   0    ← Same bits
+    0   |   1   |   1    ← Different ✓
+    1   |   0   |   1    ← Different ✓
+    1   |   1   |   0    ← Same bits
+*/
+// Example usage in toggle_case_bitwise() function (already defined above)
+// str[i] ^= 0x20;  // Toggle bit 5
+
+// 'A' (0100 0001) ^ 0x20 = 'a' (0110 0001)
+// 'a' (0110 0001) ^ 0x20 = 'A' (0100 0001)
+
+// Bitwise NOT (~)
+/*
+    Bit A | ~A
+    ------|----
+    0   | 1
+    1   | 0
+*/
+// Example usage in to_uppercase_bitwise() function above
+// str[i] &= ~0x20;  // Clear bit 5 → uppercase
+
+// 'a' (0110 0001) & ~0x20 (1101 1111) = 'A' (0100 0001) :
+
+// Print binary representation of a character :
+void bitwise_binary_representation(unsigned char ch)
+{
+    printf("Character: '%c' | ASCII: %d | Binary: ", ch, ch);
+
+    // Print each bit from MSB (bit 7) to LSB (bit 0)
+    for (int i = 7; i >= 0; i--)
+    {
+        printf("%d", (ch >> i) & 1);
+
+        // Add space after every 4 bits for readability
+        if (i == 4)
+            printf(" ");
+    }
+    printf("\n");
+}
+
+// Find duplicates using bitwise hashing (for lowercase letters only)
+void demo_finding_duplicates_bitwise()
+{
+    char A[] = "finding";
+    long int H = 0; // Hash table represented as bits
+    int i;
+
+    printf("\n=== Finding Duplicates Using Bitwise Hashing ===\n");
+    printf("String: \"%s\"\n\n", A);
+
+    // Process each character
+    for (i = 0; A[i] != '\0'; i++)
+    {
+        long int x = 1;
+
+        // Shift 1 to the position corresponding to the character
+        // 'a' -> bit 0, 'b' -> bit 1, ..., 'z' -> bit 25
+        x = x << (A[i] - 97);
+
+        // Check if this bit is already set in H
+        if ((x & H) > 0)
+        {
+            printf("'%c' is a duplicate (bit %d is already set)\n", A[i], A[i] - 97);
+        }
+        else
+        {
+            printf("'%c' is new (setting bit %d)\n", A[i], A[i] - 97);
+            H = H | x; // Set the bit for this character
+        }
+    }
+
+    printf("\nFinal hash value: %ld (0x%lX)\n", H, H);
+    printf("\nExplanation:\n");
+    printf("- Each bit position represents a letter (0='a', 1='b', ..., 25='z')\n");
+    printf("- If bit is 1, that letter has been seen\n");
+    printf("- If bit is 0, that letter hasn't been seen yet\n");
+}
+
+// ============================================================================
 // DEMONSTRATION FUNCTIONS
 // ============================================================================
 
@@ -1243,9 +1366,17 @@ int main(int argc, const char *argv[])
     demo_finding_dublicate_brute_force_comparison_marker();
     printf("\n");
     demo_finding_dublicate_brute_force_comparison();
-
-    printf("\n%s\n", "demo_finding_dublicate_brute_force_comparison");
+    printf("\n");
     demo_finfing_duplicate_characters_hashing();
+    printf("\n");
+
+    // Bitwise demonstrations
+    printf("=== Bitwise Operations Demonstrations ===\n");
+    bitwise_binary_representation('A');
+    bitwise_binary_representation('a');
+    bitwise_binary_representation('Z');
+    bitwise_binary_representation('5');
+    demo_finding_duplicates_bitwise();
 
     printf("\n=== End of Program ===\n");
     return 0;
