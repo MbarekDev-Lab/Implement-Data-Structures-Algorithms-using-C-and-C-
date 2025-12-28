@@ -924,6 +924,55 @@ void demo_finding_dublicate_brute_force_comparison()
     printf("Original string preserved: %s\n", str);
 }
 
+// Method: Finding duplicate characters using hashing O(n)
+void demo_finfing_duplicate_characters_hashing()
+{
+
+    char A[] = "finding"; // f i n d -1 -1 g
+
+    int H[26] = {0}; // Hash table for 'a' to 'z'
+    int i;
+    // Initialize hash table
+    for (int i = 0; A[i] != '\0'; i++)
+    {
+        H[A[i] - 97] += 1;
+    }
+
+    // because the ascii eng alphabet are fixed 26 english alphabet if (a b c d e f g h i j k l m n o p q r s t u v w x y z)
+    for (i = 0; i < 26; i++)
+    {
+        //   H[i] = 0;
+        /*
+        | Char | ASCII | Index (ASCII − 97) |
+        | ---- | ----- | ------------------ |
+        | f    | 102   | 5                  |
+        | i    | 105   | 8                  |
+        | n    | 110   | 13                 |
+        | d    | 100   | 3                  |
+        | i    | 105   | 8                  |
+        | n    | 110   | 13                 |
+        | g    | 103   | 6                  |
+
+        hash table
+
+        H[3]  = 1  → d
+        H[5]  = 1  → f
+        H[6]  = 1  → g
+        H[8]  = 2  → i
+        H[13] = 2  → n
+
+        */
+
+        if (H[i] > 1)
+        {
+            printf("%c occurs ", i + 97);
+            printf("%d times\n", H[i]);
+        }
+    }
+
+    // Print duplicate characters
+}
+
 // ============================================================================
 // DEMONSTRATION FUNCTIONS
 // ============================================================================
@@ -1194,6 +1243,9 @@ int main(int argc, const char *argv[])
     demo_finding_dublicate_brute_force_comparison_marker();
     printf("\n");
     demo_finding_dublicate_brute_force_comparison();
+
+    printf("\n%s\n", "demo_finding_dublicate_brute_force_comparison");
+    demo_finfing_duplicate_characters_hashing();
 
     printf("\n=== End of Program ===\n");
     return 0;
