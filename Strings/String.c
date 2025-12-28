@@ -820,6 +820,110 @@ void demo_string_reversal()
     printf("Original string unchanged: %s\n", original);
 }
 
+void demo_finding_duplicate_characters()
+{
+    printf("\n=== Finding Duplicate Characters in a String ===\n");
+
+    char str[] = "programming";
+    int freq[256] = {0};
+
+    // Count frequency of each character
+    for (int i = 0; str[i] != '\0'; i++)
+    {
+        freq[(unsigned char)str[i]]++;
+    }
+
+    // Print duplicate characters
+    printf("Duplicate characters in \"%s\":\n", str);
+    for (int i = 0; i < 256; i++)
+    {
+        if (freq[i] > 1)
+        {
+            printf("'%c' occurs %d times\n", i, freq[i]);
+        }
+    }
+}
+
+void demo_finding_dublicate_brute_force_comparison_marker()
+{
+    char str[] = "finding"; // f i n d -1 -1 g
+    int i, j, count;
+
+    printf("Duplicate characters in \"%s\" (Brute Force using -1 marker):\n", str);
+
+    for (i = 0; str[i] != '\0'; i++)
+    {
+        // Skip if this character is already marked
+        if (str[i] == -1)
+            continue;
+
+        count = 1;
+
+        // Compare with all characters after i
+        for (j = i + 1; str[j] != '\0'; j++)
+        {
+            if (str[i] == str[j])
+            {
+                count++;
+                str[j] = -1; // Mark duplicate so it's not counted again
+            }
+        }
+
+        // Print only if duplicate exists
+        if (count > 1)
+            printf("'%c' appears %d times\n", str[i], count);
+    }
+
+    printf("Original string modified with markers: %s\n", str);
+}
+
+void demo_finding_dublicate_brute_force_comparison()
+{
+    char str[] = "findinng"; // Test string with duplicates
+    int len = str_length(str);
+    int processed[256] = {0}; // Track which characters we've already counted
+    int i, j, count;
+
+    printf("Duplicate characters in \"%s\" (Brute Force ):\n", str);
+
+    for (i = 0; i < len; i++)
+    {
+        // Skip if already processed
+        /*if (str[i] == -1)
+        {
+            continue;
+        }*/
+
+        // Skip if already processed
+        if (processed[(unsigned char)str[i]])
+        {
+            continue;
+        }
+
+        count = 1;
+
+        // Count occurrences
+        for (j = i + 1; j < len; j++)
+        {
+            if (str[i] == str[j])
+            {
+                count++;
+            }
+        }
+
+        // Mark as processed
+        processed[(unsigned char)str[i]] = 1;
+
+        // Print only if it appears more than once
+        if (count > 1)
+        {
+            printf("'%c' appears %d times\n", str[i], count);
+        }
+    }
+
+    printf("Original string preserved: %s\n", str);
+}
+
 // ============================================================================
 // DEMONSTRATION FUNCTIONS
 // ============================================================================
@@ -1084,6 +1188,12 @@ int main(int argc, const char *argv[])
     demo_string_reversal();
     printf("\n");
     comparing_string();
+    printf("\n");
+    demo_finding_duplicate_characters();
+    printf("\n");
+    demo_finding_dublicate_brute_force_comparison_marker();
+    printf("\n");
+    demo_finding_dublicate_brute_force_comparison();
 
     printf("\n=== End of Program ===\n");
     return 0;
