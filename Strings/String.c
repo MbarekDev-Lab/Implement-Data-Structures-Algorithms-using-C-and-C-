@@ -1096,6 +1096,58 @@ void demo_finding_duplicates_bitwise()
     printf("- If bit is 0, that letter hasn't been seen yet\n");
 }
 
+// Check if two strings are anagrams using hash table
+void checkfor_anagram_bitwise()
+{
+    char A[] = "decimal";
+    char B[] = "medical";
+    int i, H[26] = {0};
+
+    printf("\n=== Anagram Check Using Hash Table ===\n");
+    printf("String A: \"%s\"\n", A);
+    printf("String B: \"%s\"\n\n", B);
+
+    // Step 1: Count frequency of each character in first string
+    for (i = 0; A[i] != '\0'; i++)
+    {
+        H[A[i] - 97] += 1;
+        printf("'%c' -> H[%d] = %d\n", A[i], A[i] - 97, H[A[i] - 97]);
+    }
+
+    printf("\n");
+
+    // Step 2: Decrement frequency for each character in second string
+    for (i = 0; B[i] != '\0'; i++)
+    {
+        H[B[i] - 97] -= 1;
+        printf("'%c' -> H[%d] = %d\n", B[i], B[i] - 97, H[B[i] - 97]);
+
+        // Bug fix: Check B[i], not A[i]!
+        if (H[B[i] - 97] < 0)
+        {
+            printf("\n Not an anagram (character '%c' appears more in B than in A)\n", B[i]);
+            return;
+        }
+    }
+
+    // Step 3: Verify all counts are zero
+    printf("\n");
+    for (i = 0; i < 26; i++)
+    {
+        if (H[i] != 0)
+        {
+            printf(" Not an anagram (character '%c' count is %d)\n", i + 97, H[i]);
+            return;
+        }
+    }
+
+    printf(" Strings are anagrams!\n");
+    printf("\nExplanation:\n");
+    printf("- First loop: Increment count for each character in string A\n");
+    printf("- Second loop: Decrement count for each character in string B\n");
+    printf("- If all counts are 0, strings are anagrams (same characters, same frequency)\n");
+}
+
 // ============================================================================
 // DEMONSTRATION FUNCTIONS
 // ============================================================================
@@ -1325,6 +1377,24 @@ void demoCountingWordsVowelsConsonants()
     printf("Words: %d, Vowels: %d, Consonants: %d\n", words, vowels, consonants);
 }
 
+void demo_bitwise_operations()
+{
+    printf("\n=== Bitwise Operations Demonstration ===\n");
+
+    // Demonstrate binary representation
+    char ch = 'A';
+    bitwise_binary_representation(ch);
+    ch = 'a';
+    bitwise_binary_representation(ch);
+
+    // Demonstrate finding duplicates using bitwise hashing
+    demo_finding_duplicates_bitwise();
+
+    // Demonstrate anagram checking
+    printf("\n");
+    checkfor_anagram_bitwise();
+}
+
 // ============================================================================
 // MAIN clang -o string_app Strings/String.c && ./string_app
 // ============================================================================
@@ -1384,3 +1454,6 @@ int main(int argc, const char *argv[])
 
 // clang -o string_app Strings/String.c && ./string_app
 // gcc -std=c17 -o string_app Strings/String.c && ./string_app
+
+// clang -o string_app String.c && ./string_app
+// gcc -std=c17 -o string_app String.c && ./string_app
