@@ -1148,6 +1148,38 @@ void checkfor_anagram_bitwise()
     printf("- If all counts are 0, strings are anagrams (same characters, same frequency)\n");
 }
 
+void permutation_of_string()
+{
+    static char A[] = "ABC";
+    static int i, j, k;
+
+    printf("\n=== Permutations of String ===\n");
+    printf("String: \"%s\"\n\n", A);
+
+    int len = str_length(A);
+
+    // Generate permutations using three nested loops
+    for (i = 0; i < len; i++)
+    {
+        for (j = 0; j < len; j++)
+        {
+            for (k = 0; k < len; k++)
+            {
+                // Ensure all indices are different
+                if (i != j && j != k && i != k)
+                {
+                    printf("%c%c%c\n", A[i], A[j], A[k]);
+                }
+            }
+        }
+    }
+
+    printf("\nExplanation:\n");
+    printf("- Three nested loops iterate over each character position\n");
+    printf("- The condition ensures no character is repeated in a permutation\n");
+    printf("- This method works well for small strings (length <= 3)\n");
+}
+
 // ============================================================================
 // DEMONSTRATION FUNCTIONS
 // ============================================================================
