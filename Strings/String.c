@@ -1148,6 +1148,420 @@ void checkfor_anagram_bitwise()
     printf("- If all counts are 0, strings are anagrams (same characters, same frequency)\n");
 }
 
+// ============================================================================
+// BINARY SEARCH ALGORITHM
+// ============================================================================
+
+/*
+Binary Search Algorithm:
+========================
+Searches for a key in a SORTED array by repeatedly dividing search space in half.
+
+Time Complexity : O(log n)
+Space Complexity: O(1)
+
+Example: Search for 18 in [5, 8, 12, 15, 18, 21, 25]
+
+Index:  0   1   2   3   4   5   6
+Value:  5   8  12  15  18  21  25
+
+Initial: low=0, high=6, n=7
+
+Iteration 1:
+  mid = (0 + 6) / 2 = 3
+  A[3] = 15
+  18 > 15 → search right half → low = mid + 1 = 4
+
+Iteration 2:
+  low=4, high=6
+  mid = (4 + 6) / 2 = 5
+  A[5] = 21
+  18 < 21 → search left half → high = mid - 1 = 4
+
+Iteration 3:
+  low=4, high=4
+  mid = (4 + 4) / 2 = 4
+  A[4] = 18
+  18 == 18 → FOUND! return 4 ✓
+
+Precondition: Array MUST be sorted
+Returns: Index of element if found, -1 if not found
+*/
+
+int binarySearch(int A[], int n, int key)
+{
+    int low = 0;
+    int high = n - 1;
+
+    while (low <= high)
+    {
+        // Overflow-safe midpoint calculation
+        int mid = low + (high - low) / 2;
+
+        if (A[mid] == key)
+            return mid; // Found!
+        else if (key < A[mid])
+            high = mid - 1; // Search left half
+        else
+            low = mid + 1; // Search right half
+    }
+
+    return -1; // Not found
+}
+
+// Demonstration of binary search
+void demo_binary_search()
+{
+    printf("\n=== Binary Search Demonstration ===\n");
+
+    int arr[] = {5, 8, 12, 15, 18, 21, 25};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    printf("Sorted array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    printf("\n\n");
+
+    // Test cases
+    int keys[] = {18, 5, 25, 10, 30};
+
+    for (int i = 0; i < 5; i++)
+    {
+        int result = binarySearch(arr, n, keys[i]);
+
+        if (result != -1)
+            printf("Key %d found at index %d\n", keys[i], result);
+        else
+            printf("Key %d NOT found in array\n", keys[i]);
+    }
+
+    printf("\n╔════════════════════════════════════════════════════════════╗\n");
+    printf("║              BINARY SEARCH COMPLEXITY                      ║\n");
+    printf("╠════════════════════════════════════════════════════════════╣\n");
+    printf("║ Time Complexity:   O(log n)                               ║\n");
+    printf("║ Space Complexity:  O(1)                                   ║\n");
+    printf("║ Precondition:      Array must be SORTED                   ║\n");
+    printf("║ Best Case:         O(1) - element at middle               ║\n");
+    printf("║ Worst Case:        O(log n) - not found or at end         ║\n");
+    printf("╚════════════════════════════════════════════════════════════╝\n");
+}
+
+// ============================================================================
+// STRING PERMUTATION ALGORITHMS
+// ============================================================================
+
+/*
+PERMUTATION EXPLANATION:
+========================
+For string "ABC", all permutations are:
+ABC, ACB, BAC, BCA, CAB, CBA (Total: 3! = 6 permutations)
+
+Algorithm 1: Using Three Nested Loops (Brute Force)
+----------------------------------------------------
+- Works only for strings of length 3
+- Time Complexity: O(n³)
+- Space Complexity: O(1)
+
+Example for "ABC":
+i=0, j=1, k=2 → ABC
+i=0, j=2, k=1 → ACB
+i=1, j=0, k=2 → BAC
+i=1, j=2, k=0 → BCA
+i=2, j=0, k=1 → CAB
+i=2, j=1, k=0 → CBA
+
+Algorithm 2: Backtracking (Recursive) - Universal Solution
+-----------------------------------------------------------
+- Works for any string length
+- Time Complexity: O(n! × n)
+- Space Complexity: O(n) for recursion stack
+
+Process for "ABC":
+1. Fix 'A', permute "BC" → ABC, ACB
+2. Fix 'B', permute "AC" → BAC, BCA
+3. Fix 'C', permute "AB" → CAB, CBA
+
+Key Concepts:
+- Swap characters to generate different combinations
+- Recursively permute remaining substring
+- Backtrack (swap back) to restore original state
+*/
+
+///  Generate all permutations of a string using three nested loops
+// ============================================================================
+// STRING PERMUTATION ALGORITHMS
+// ============================================================================
+
+/*
+PERMUTATION EXPLANATION:
+========================
+For string "ABC", all permutations are:
+ABC, ACB, BAC, BCA, CAB, CBA (Total: 3! = 6 permutations)
+
+Algorithm 1: Using Three Nested Loops (Brute Force)
+----------------------------------------------------
+- Works only for strings of length 3
+- Time Complexity: O(n³)
+- Space Complexity: O(1)
+
+Example for "ABC":
+i=0, j=1, k=2 → ABC
+i=0, j=2, k=1 → ACB
+i=1, j=0, k=2 → BAC
+i=1, j=2, k=0 → BCA
+i=2, j=0, k=1 → CAB
+i=2, j=1, k=0 → CBA
+
+Algorithm 2: Backtracking (Recursive) - Universal Solution
+-----------------------------------------------------------
+- Works for any string length
+- Time Complexity: O(n! × n)
+- Space Complexity: O(n) for recursion stack
+
+Process for "ABC":
+1. Fix 'A', permute "BC" → ABC, ACB
+2. Fix 'B', permute "AC" → BAC, BCA
+3. Fix 'C', permute "AB" → CAB, CBA
+
+Key Concepts:
+- Swap characters to generate different combinations
+- Recursively permute remaining substring
+- Backtrack (swap back) to restore original state
+*/
+
+// ============================================================================
+// METHOD 1: Brute Force (3 Nested Loops) - Only for length 3
+// ============================================================================
+void permutation_brute_force()
+{
+    char A[] = "ABC";
+    int len = str_length(A);
+    int count = 0;
+
+    printf("\n=== Permutations Using Brute Force (3 Nested Loops) ===\n");
+    printf("String: \"%s\" (length = %d)\n", A, len);
+    printf("Total permutations: %d! = 6\n\n", len);
+
+    // Generate all permutations using three indices
+    for (int i = 0; i < len; i++)
+    {
+        for (int j = 0; j < len; j++)
+        {
+            for (int k = 0; k < len; k++)
+            {
+                // Ensure all indices are different (no repeated characters)
+                if (i != j && j != k && i != k)
+                {
+                    printf("%d: %c%c%c\n", ++count, A[i], A[j], A[k]);
+                }
+            }
+        }
+    }
+
+    printf("\nLimitation: This method ONLY works for strings of length 3!\n");
+}
+
+// ============================================================================
+// METHOD 2: Backtracking (Recursive) - Works for any length
+// ============================================================================
+
+// Helper function to swap two characters
+void swap_chars(char *a, char *b)
+{
+    char temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Recursive function to generate permutations
+void permute_recursive(char str[], int left, int right, int *count)
+{
+    // Base case: reached the end of string
+    if (left == right)
+    {
+        printf("%d: %s\n", ++(*count), str);
+    }
+    else
+    {
+        // Try each character at position 'left'
+        for (int i = left; i <= right; i++)
+        {
+            // Step 1: Swap current character with position 'left'
+            swap_chars(&str[left], &str[i]);
+
+            // Step 2: Recursively permute remaining substring
+            permute_recursive(str, left + 1, right, count);
+
+            // Step 3: Backtrack - restore original string
+            swap_chars(&str[left], &str[i]);
+        }
+    }
+}
+
+// Wrapper function for recursive permutation
+void permutation_backtracking()
+{
+    char str[] = "ABC";
+    int len = str_length(str);
+    int count = 0;
+
+    printf("\n=== Permutations Using Backtracking (Recursive) ===\n");
+    printf("String: \"%s\" (length = %d)\n", str, len);
+
+    // Calculate factorial
+    int factorial = 1;
+    for (int i = 2; i <= len; i++)
+        factorial *= i;
+    printf("Total permutations: %d! = %d\n\n", len, factorial);
+
+    permute_recursive(str, 0, len - 1, &count);
+
+    printf("\nThis method works for ANY string length!\n");
+}
+
+// ============================================================================
+// METHOD 3: Detailed Step-by-Step Backtracking with Visualization
+// ============================================================================
+void permute_with_visualization(char str[], int left, int right, int depth)
+{
+    // Indentation for visualization
+    for (int i = 0; i < depth; i++)
+        printf("  ");
+
+    if (left == right)
+    {
+        printf("✓ Found permutation: %s\n", str);
+    }
+    else
+    {
+        printf("Level %d: Fixing position %d, trying chars: ", depth, left);
+        for (int i = left; i <= right; i++)
+            printf("%c ", str[i]);
+        printf("\n");
+
+        for (int i = left; i <= right; i++)
+        {
+            // Show swap
+            for (int j = 0; j < depth; j++)
+                printf("  ");
+            printf("→ Swap str[%d]='%c' ↔ str[%d]='%c' → ", left, str[left], i, str[i]);
+
+            swap_chars(&str[left], &str[i]);
+            printf("%s\n", str);
+
+            // Recurse
+            permute_with_visualization(str, left + 1, right, depth + 1);
+
+            // Show backtrack
+            for (int j = 0; j < depth; j++)
+                printf("  ");
+            printf("← Backtrack: Swap back str[%d]='%c' ↔ str[%d]='%c' → ", left, str[left], i, str[i]);
+
+            swap_chars(&str[left], &str[i]);
+            printf("%s\n", str);
+        }
+    }
+}
+
+void permutation_with_steps()
+{
+    char str[] = "ABC";
+    int len = str_length(str);
+
+    printf("\n=== Permutations with Step-by-Step Visualization ===\n");
+    printf("String: \"%s\"\n", str);
+    printf("Watch how backtracking generates all permutations:\n\n");
+
+    permute_with_visualization(str, 0, len - 1, 0);
+}
+
+// ============================================================================
+// METHOD 4: Using Heap's Algorithm (Most Efficient)
+// ============================================================================
+void heaps_algorithm(char str[], int size, int n, int *count)
+{
+    if (size == 1)
+    {
+        printf("%d: %s\n", ++(*count), str);
+        return;
+    }
+
+    for (int i = 0; i < size; i++)
+    {
+        heaps_algorithm(str, size - 1, n, count);
+
+        // If size is odd, swap first and last element
+        if (size % 2 == 1)
+        {
+            swap_chars(&str[0], &str[size - 1]);
+        }
+        // If size is even, swap i-th and last element
+        else
+        {
+            swap_chars(&str[i], &str[size - 1]);
+        }
+    }
+}
+
+void permutation_heaps()
+{
+    char str[] = "ABC";
+    int len = str_length(str);
+    int count = 0;
+
+    printf("\n=== Permutations Using Heap's Algorithm ===\n");
+    printf("String: \"%s\"\n", str);
+    printf("(Most efficient algorithm for generating permutations)\n\n");
+
+    heaps_algorithm(str, len, len, &count);
+}
+
+// ============================================================================
+// DEMONSTRATION FUNCTION
+// ============================================================================
+void demo_string_permutations()
+{
+    printf("\n╔════════════════════════════════════════════════════════════╗\n");
+    printf("║        STRING PERMUTATION ALGORITHMS COMPARISON            ║\n");
+    printf("╚════════════════════════════════════════════════════════════╝\n");
+
+    // Method 1: Brute Force (only for length 3)
+    permutation_brute_force();
+
+    // Method 2: Standard Backtracking
+    permutation_backtracking();
+
+    // Method 3: Backtracking with Visualization
+    permutation_with_steps();
+
+    // Method 4: Heap's Algorithm
+    permutation_heaps();
+
+    // Test with different string lengths
+    printf("\n=== Testing with Different String Lengths ===\n");
+
+    char test1[] = "AB";
+    int count1 = 0;
+    printf("\nString: \"%s\" → Permutations:\n", test1);
+    permute_recursive(test1, 0, 1, &count1);
+
+    char test2[] = "ABCD";
+    int count2 = 0;
+    printf("\nString: \"%s\" → Permutations:\n", test2);
+    permute_recursive(test2, 0, 3, &count2);
+
+    // Comparison table
+    printf("\n╔════════════════════════════════════════════════════════════╗\n");
+    printf("║              ALGORITHM COMPARISON TABLE                    ║\n");
+    printf("╠════════════════════════════════════════════════════════════╣\n");
+    printf("║ Method          │ Time      │ Space │ Works for any n?   ║\n");
+    printf("║─────────────────┼───────────┼───────┼────────────────────║\n");
+    printf("║ Brute Force     │ O(n³)     │ O(1)  │ NO (only n=3)      ║\n");
+    printf("║ Backtracking    │ O(n!×n)   │ O(n)  │ YES ✓              ║\n");
+    printf("║ Heap's Algo     │ O(n!)     │ O(n)  │ YES ✓ (fastest)    ║\n");
+    printf("╚════════════════════════════════════════════════════════════╝\n");
+}
+
 void permutation_of_string()
 {
     static char A[] = "ABC";
@@ -1178,6 +1592,23 @@ void permutation_of_string()
     printf("- Three nested loops iterate over each character position\n");
     printf("- The condition ensures no character is repeated in a permutation\n");
     printf("- This method works well for small strings (length <= 3)\n");
+}
+
+void perm(char s[], int l, int h)
+{
+    if (l == h)
+    {
+        printf("%s\n", s);
+    }
+    else
+    {
+        for (int i = l; i <= h; i++)
+        {
+            swap_chars(&s[l], &s[i]);
+            perm(s, l + 1, h);
+            swap_chars(&s[l], &s[i]); // backtracking
+        }
+    }
 }
 
 // ============================================================================
@@ -1480,9 +1911,417 @@ int main(int argc, const char *argv[])
     bitwise_binary_representation('5');
     demo_finding_duplicates_bitwise();
 
+    // Binary Search demonstration
+    printf("\n");
+    demo_binary_search();
+
+    // Permutation demonstrations
+    printf("\n=== Permutation of String Demonstrations ===\n");
+    char s[] = "ABC";
+    perm(s, 0, 2);
+    permutation_of_string();
+    printf("\n");
+    demo_string_permutations();
+    printf("\n");
+
     printf("\n=== End of Program ===\n");
     return 0;
 }
+/*
+benraiss@Mbareks-MacBook-Air data-structures-c-cpp % clang -o string_app1 Strings/String.c
+benraiss@Mbareks-MacBook-Air data-structures-c-cpp % ./string_app1
+=== String Operations Demonstration ===
+
+=== Basic String Operations ===
+Original string: Hello, World!
+Length: 13
+Copied string: C Programming
+Concatenated: Hello World
+
+
+=== Case Operations ===
+Original: Data Structures in C
+Uppercase: DATA STRUCTURES IN C
+Lowercase: data structures in c
+Toggle case: dATA sTRUCTURES IN c
+
+
+=== String Analysis ===
+String: Data Structures in C
+Vowels: 6
+Consonants: 11
+Words: 4
+
+'madam' is palindrome: Yes
+'hello' is palindrome: No
+
+
+=== Advanced Operations ===
+Original: hello
+Reversed: olleh
+
+Anagram check:
+'listen' and 'silent': Anagrams
+'hello' and 'world': Not anagrams
+
+Original: programming
+After removing duplicates: progamin
+
+
+=== String Comparison ===
+'apple' vs 'banana': -1 (negative means first is less)
+'hello' vs 'hello': 0 (zero means equal)
+'zebra' vs 'apple': 25 (positive means first is greater)
+
+
+=== Case Conversion Methods Demonstration ===
+
+Method 1 - ASCII Arithmetic:
+Before: hello world 123
+After:  HELLO WORLD 123
+
+Method 2 - Lookup Table:
+Before: data structures in c
+After:  DATA STRUCTURES IN C
+
+Method 3 - ctype.h (toupper):
+Before: programming in c
+After:  PROGRAMMING IN C
+
+Method 4 - Bitwise Operation:
+Before: efficient algorithm
+After:  EFFICIENT ALGORITHM
+
+Lowercase Conversion (ASCII):
+Before: CONVERT TO LOWERCASE
+After:  convert to lowercase
+
+Lowercase Conversion (Bitwise):
+Before: BITWISE LOWERCASE
+After:  bitwise lowercase
+
+=== Performance Notes ===
+1. ASCII Arithmetic:   Fast, simple, readable
+2. Lookup Table:       O(n*26) time, educational value
+3. ctype.h:           Most portable, locale-aware
+4. Bitwise:           Fastest, ~2x faster than arithmetic
+
+
+=== Testing toggle_case_ascii Function ===
+Original:     Hello World!
+After toggle: hELLO wORLD!
+Toggle back:  Hello World!
+
+Original:     ProGRamMinG In C 2024
+After toggle: pROgrAMmINg iN c 2024
+
+Original:     ABC123xyz
+After toggle: abc123XYZ
+
+
+=== Vowel and Consonant Counting Demonstration ===
+
+Method 1 - Output Parameters:
+String: "How are you"
+Vowels: 5, Consonants: 4
+
+Method 2 - Direct Printing:
+String: "Programming in C"
+Vowels: 4
+Consonants: 10
+
+Method 3 - Lookup Table:
+String: "Data Structures and Algorithms"
+Vowels: 9, Consonants: 18
+
+=== Multiple Test Cases ===
+Hello World!              -> Vowels:  3, Consonants:  7
+AEIOU                     -> Vowels:  5, Consonants:  0
+bcdfg                     -> Vowels:  0, Consonants:  5
+C Programming 2024        -> Vowels:  3, Consonants:  9
+xyz123ABC                 -> Vowels:  1, Consonants:  5
+
+=== Performance Comparison ===
+1. Output Parameters:  Flexible, can use counts elsewhere
+2. Direct Printing:    Simple, good for one-time use
+3. Lookup Table:       Fastest, O(1) vowel check per char
+
+
+=== Counting Words, Vowels, and Consonants ===
+String: "Data Structures in C Programming"
+Words: 5, Vowels: 9, Consonants: 19
+
+String: "abcd efg hijklmnop qrstuvw xyz"
+Vowels: 5
+Consonants: 21
+
+Words: 5
+
+
+=== String Validation Demonstration ===
+
+=== String Validation ===
+Original String: Ani?32!
+'A' is an alphabetic character.
+'n' is an alphabetic character.
+'i' is an alphabetic character.
+'?' is a special character.
+'3' is a digit.
+'2' is a digit.
+'!' is a special character.
+
+Summary:
+Alphabetic characters: 3
+Digits: 2
+Special characters: 2
+
+Validation result: INVALID (has special chars)
+
+=== Testing Multiple Strings ===
+
+String: "Hello123"
+  Alphanumeric: YES
+  Alphabetic only: NO
+
+String: "OnlyLetters"
+  Alphanumeric: YES
+  Alphabetic only: YES
+
+String: "With Spaces"
+  Alphanumeric: NO
+  Alphabetic only: NO
+
+String: "Special!@#"
+  Alphanumeric: NO
+  Alphabetic only: NO
+
+String: "Mix3d_Ch4rs"
+  Alphanumeric: NO
+  Alphabetic only: NO
+
+
+=== String Reversal Methods ===
+
+Method 1 - In-place Reversal:
+Before: Hello World
+After:  dlroW olleH
+
+Method 2 - Copy to New String:
+Original: Programming in C
+Reversed: C ni gnimmargorP
+
+Method 3 - Without Temp Array (hardcoded):
+Reversed string: nohtyP
+
+=== Immutability Check ===
+Original string unchanged: Programming in C
+
+String A is greater than String B
+
+
+=== Finding Duplicate Characters in a String ===
+Duplicate characters in "programming":
+'g' occurs 2 times
+'m' occurs 2 times
+'r' occurs 2 times
+
+Duplicate characters in "finding" (Brute Force using -1 marker):
+'i' appears 2 times
+'n' appears 2 times
+Original string modified with markers: find��g
+
+Duplicate characters in "findinng" (Brute Force ):
+'i' appears 2 times
+'n' appears 3 times
+Original string preserved: findinng
+
+i occurs 2 times
+n occurs 2 times
+
+=== Bitwise Operations Demonstrations ===
+Character: 'A' | ASCII: 65 | Binary: 0100 0001
+Character: 'a' | ASCII: 97 | Binary: 0110 0001
+Character: 'Z' | ASCII: 90 | Binary: 0101 1010
+Character: '5' | ASCII: 53 | Binary: 0011 0101
+
+=== Finding Duplicates Using Bitwise Hashing ===
+String: "finding"
+
+'f' is new (setting bit 5)
+'i' is new (setting bit 8)
+'n' is new (setting bit 13)
+'d' is new (setting bit 3)
+'i' is a duplicate (bit 8 is already set)
+'n' is a duplicate (bit 13 is already set)
+'g' is new (setting bit 6)
+
+Final hash value: 8552 (0x2168)
+
+Explanation:
+- Each bit position represents a letter (0='a', 1='b', ..., 25='z')
+- If bit is 1, that letter has been seen
+- If bit is 0, that letter hasn't been seen yet
+
+
+=== Binary Search Demonstration ===
+Sorted array: 5 8 12 15 18 21 25
+
+Key 18 found at index 4
+Key 5 found at index 0
+Key 25 found at index 6
+Key 10 NOT found in array
+Key 30 NOT found in array
+
+╔════════════════════════════════════════════════════════════╗
+║              BINARY SEARCH COMPLEXITY                      ║
+╠════════════════════════════════════════════════════════════╣
+║ Time Complexity:   O(log n)                               ║
+║ Space Complexity:  O(1)                                   ║
+║ Precondition:      Array must be SORTED                   ║
+║ Best Case:         O(1) - element at middle               ║
+║ Worst Case:        O(log n) - not found or at end         ║
+╚════════════════════════════════════════════════════════════╝
+
+=== Permutation of String Demonstrations ===
+ABC
+ACB
+BAC
+BCA
+CBA
+CAB
+
+=== Permutations of String ===
+String: "ABC"
+
+ABC
+ACB
+BAC
+BCA
+CAB
+CBA
+
+Explanation:
+- Three nested loops iterate over each character position
+- The condition ensures no character is repeated in a permutation
+- This method works well for small strings (length <= 3)
+
+
+╔════════════════════════════════════════════════════════════╗
+║        STRING PERMUTATION ALGORITHMS COMPARISON            ║
+╚════════════════════════════════════════════════════════════╝
+
+=== Permutations Using Brute Force (3 Nested Loops) ===
+String: "ABC" (length = 3)
+Total permutations: 3! = 6
+
+1: ABC
+2: ACB
+3: BAC
+4: BCA
+5: CAB
+6: CBA
+
+Limitation: This method ONLY works for strings of length 3!
+
+=== Permutations Using Backtracking (Recursive) ===
+String: "ABC" (length = 3)
+Total permutations: 3! = 6
+
+1: ABC
+2: ACB
+3: BAC
+4: BCA
+5: CBA
+6: CAB
+
+This method works for ANY string length!
+
+=== Permutations with Step-by-Step Visualization ===
+String: "ABC"
+Watch how backtracking generates all permutations:
+
+Level 0: Fixing position 0, trying chars: A B C
+→ Swap str[0]='A' ↔ str[0]='A' → ABC
+  Level 1: Fixing position 1, trying chars: B C
+  → Swap str[1]='B' ↔ str[1]='B' → ABC
+    ✓ Found permutation: ABC
+  ← Backtrack: Swap back str[1]='B' ↔ str[1]='B' → ABC
+  → Swap str[1]='B' ↔ str[2]='C' → ACB
+    ✓ Found permutation: ACB
+  ← Backtrack: Swap back str[1]='C' ↔ str[2]='B' → ABC
+← Backtrack: Swap back str[0]='A' ↔ str[0]='A' → ABC
+→ Swap str[0]='A' ↔ str[1]='B' → BAC
+  Level 1: Fixing position 1, trying chars: A C
+  → Swap str[1]='A' ↔ str[1]='A' → BAC
+    ✓ Found permutation: BAC
+  ← Backtrack: Swap back str[1]='A' ↔ str[1]='A' → BAC
+  → Swap str[1]='A' ↔ str[2]='C' → BCA
+    ✓ Found permutation: BCA
+  ← Backtrack: Swap back str[1]='C' ↔ str[2]='A' → BAC
+← Backtrack: Swap back str[0]='B' ↔ str[1]='A' → ABC
+→ Swap str[0]='A' ↔ str[2]='C' → CBA
+  Level 1: Fixing position 1, trying chars: B A
+  → Swap str[1]='B' ↔ str[1]='B' → CBA
+    ✓ Found permutation: CBA
+  ← Backtrack: Swap back str[1]='B' ↔ str[1]='B' → CBA
+  → Swap str[1]='B' ↔ str[2]='A' → CAB
+    ✓ Found permutation: CAB
+  ← Backtrack: Swap back str[1]='A' ↔ str[2]='B' → CBA
+← Backtrack: Swap back str[0]='C' ↔ str[2]='A' → ABC
+
+=== Permutations Using Heap's Algorithm ===
+String: "ABC"
+(Most efficient algorithm for generating permutations)
+
+1: ABC
+2: BAC
+3: CAB
+4: ACB
+5: BCA
+6: CBA
+
+=== Testing with Different String Lengths ===
+
+String: "AB" → Permutations:
+1: AB
+2: BA
+
+String: "ABCD" → Permutations:
+1: ABCD
+2: ABDC
+3: ACBD
+4: ACDB
+5: ADCB
+6: ADBC
+7: BACD
+8: BADC
+9: BCAD
+10: BCDA
+11: BDCA
+12: BDAC
+13: CBAD
+14: CBDA
+15: CABD
+16: CADB
+17: CDAB
+18: CDBA
+19: DBCA
+20: DBAC
+21: DCBA
+22: DCAB
+23: DACB
+24: DABC
+
+╔════════════════════════════════════════════════════════════╗
+║              ALGORITHM COMPARISON TABLE                    ║
+╠════════════════════════════════════════════════════════════╣
+║ Method          │ Time      │ Space │ Works for any n?   ║
+║─────────────────┼───────────┼───────┼────────────────────║
+║ Brute Force     │ O(n³)     │ O(1)  │ NO (only n=3)      ║
+║ Backtracking    │ O(n!×n)   │ O(n)  │ YES ✓              ║
+║ Heap's Algo     │ O(n!)     │ O(n)  │ YES ✓ (fastest)    ║
+╚════════════════════════════════════════════════════════════╝
+*/
 
 // clang -o string_app Strings/String.c && ./string_app
 // gcc -std=c17 -o string_app Strings/String.c && ./string_app
