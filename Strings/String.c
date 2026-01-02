@@ -1967,12 +1967,10 @@ Anagram check:
 Original: programming
 After removing duplicates: progamin
 
-
 === String Comparison ===
 'apple' vs 'banana': -1 (negative means first is less)
 'hello' vs 'hello': 0 (zero means equal)
 'zebra' vs 'apple': 25 (positive means first is greater)
-
 
 === Case Conversion Methods Demonstration ===
 
@@ -2056,7 +2054,6 @@ Vowels: 5
 Consonants: 21
 
 Words: 5
-
 
 === String Validation Demonstration ===
 
