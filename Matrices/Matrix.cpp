@@ -17,7 +17,7 @@ private:
 public:
     // Constructors
     Diagonal();
-    explicit Diagonal(int n);
+    explicit Diagonal(int n); // explicit prevents implicit conversions (e.g Diagonal d = 5; is not allowed)
     Diagonal(const Diagonal &other);
     Diagonal(Diagonal &&other) noexcept;
 
@@ -25,7 +25,7 @@ public:
     ~Diagonal();
 
     // Assignment operators
-    Diagonal &operator=(const Diagonal &other);
+    Diagonal &operator=(const Diagonal &other); // i am creating a new object that duplicates another one.
     Diagonal &operator=(Diagonal &&other) noexcept;
 
     // Core operations
@@ -134,6 +134,13 @@ Diagonal &Diagonal::operator=(const Diagonal &other)
     }
     return *this;
 }
+
+/*
+| Syntax    | Meaning              | Used for |
+| --------- | -------------------- | -------- |
+| &other    | **lvalue reference** | Copying  |
+| &&other   | **rvalue reference** | Moving   |
+*/
 
 Diagonal &Diagonal::operator=(Diagonal &&other) noexcept
 {
