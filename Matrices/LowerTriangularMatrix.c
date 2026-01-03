@@ -124,6 +124,11 @@ void Set(Matrix *m, int i, int j, int x)
         fprintf(stderr, "Index out of bounds (%d, %d)\n", i, j);
         return;
     }
+    
+    // formula alternative
+    /*if(i >= j){
+        m->A[m->n*(j-1) + (j-2) * (j-1) / 2+(i - j )] = x;
+    }*/
 
     if (i >= j) // Lower triangle (including diagonal)
     {
@@ -140,6 +145,12 @@ int Get(const Matrix *m, int i, int j)
 {
     if (i < 1 || i > m->n || j < 1 || j > m->n)
         return 0;
+
+    // formula alternative
+    /*if(i>= j){
+     return m->A[m->n*(j-1) + (j-2) * (j-1) / 2+(i - j)];  
+    } else return 0;*/
+
 
     if (i >= j) // Lower triangle
     {
