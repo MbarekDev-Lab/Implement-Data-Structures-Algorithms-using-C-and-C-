@@ -2,22 +2,43 @@
 using namespace std;
  
 class LTMatrix{
+
 private:
     int n;
     int* A;
+
 public:
-    LTMatrix(int n){
+    LTMatrix(int n){ // constructor
+        A = nullptr;
         this->n = n;
         A = new int [n * (n + 1)/2];
     }
-    ~LTMatrix(){ delete[] A; }
-    void Display(bool row=true);
+
+    ~LTMatrix(){ // destructor
+         delete[] A;
+    }
+    
+    // ============================================================================
+    // CORE OPERATIONS row major ->  ((i * (i - 1))/2) + j - 1
+    // ============================================================================    
     void setRowMajor(int i, int j, int x);
-    void setColMajor(int i, int j, int x);
     int getRowMajor(int i, int j);
+
+    // ============================================================================
+    // CORE OPERATIONS column major -> (n * (j-1) - (((j-2) * (j-1))/2)) + (i-j)
+    // ============================================================================
+    void setColMajor(int i, int j, int x);
     int getColMajor(int i, int j);
-    int getN(){ return n; }
- 
+
+    int getN(){ 
+        return n; 
+    }
+
+    void setN(int n){
+        this->n = n;
+    }
+
+    void Display(bool row=true);
 };
  
 void LTMatrix::setRowMajor(int i, int j, int x) {
@@ -68,6 +89,10 @@ void LTMatrix::Display(bool row) {
         cout << endl;
     }
 }
+
+void LTMatrix::setN(int n){
+        this->n = n;
+    }
  
 int main() {
  
