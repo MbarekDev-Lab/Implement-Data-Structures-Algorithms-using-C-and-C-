@@ -9,19 +9,19 @@
 // ============================================================================
 /*
  * Lower Triangular Matrix: All elements above diagonal are 0
- * 
+ *
  * Example (5×5):
  * [ a11  0    0    0    0  ]
  * [ a21  a22  0    0    0  ]
  * [ a31  a32  a33  0    0  ]
  * [ a41  a42  a43  a44  0  ]
  * [ a51  a52  a53  a54  a55]
- * 
+ *
  * Storage: Only stores n(n+1)/2 elements instead of n²
- * 
+ *
  * Row-Major Mapping Formula (1-based indexing):
  * Index(i,j) = (i-1)i/2 + (j-1)   where i ≥ j
- * 
+ *
  * Key Intuition:
  * - Row 1 has 1 element
  * - Row 2 has 2 elements
@@ -33,8 +33,8 @@
 class LowerTriangular
 {
 private:
-    int *A;     // 1D array storing only lower triangle elements
-    int n;      // Dimension of square matrix (n×n)
+    int *A; // 1D array storing only lower triangle elements
+    int n;  // Dimension of square matrix (n×n)
 
     // Private helper: Convert 2D (i,j) to 1D index using row-major formula
     int Index(int i, int j) const
@@ -71,7 +71,7 @@ public:
     int Trace() const;
     int Determinant() const;
     bool IsSymmetric() const;
-    
+
     // Utility
     int GetDimension() const { return n; }
     int GetStoredElements() const { return n * (n + 1) / 2; }
@@ -97,8 +97,8 @@ LowerTriangular::LowerTriangular(int n) : A(nullptr), n(0)
     if (n > 0)
     {
         this->n = n;
-        int size = n * (n + 1) / 2;  // Number of elements in lower triangle
-        A = new int[size]();          // Zero-initialized
+        int size = n * (n + 1) / 2; // Number of elements in lower triangle
+        A = new int[size]();        // Zero-initialized
     }
 }
 
@@ -178,14 +178,14 @@ void LowerTriangular::Set(int i, int j, int x)
         return;
     }
 
-    if (i >= j)  // Lower triangle (including diagonal)
+    if (i >= j) // Lower triangle (including diagonal)
     {
         int index = Index(i, j);
         A[index] = x;
     }
-    else if (x != 0)  // Upper triangle: only allow zeros
+    else if (x != 0) // Upper triangle: only allow zeros
     {
-        std::cerr << "Cannot store non-zero value " << x 
+        std::cerr << "Cannot store non-zero value " << x
                   << " in upper triangle at (" << i << ", " << j << ")\n";
     }
 }
@@ -195,12 +195,12 @@ int LowerTriangular::Get(int i, int j) const
     if (i < 1 || i > n || j < 1 || j > n)
         return 0;
 
-    if (i >= j)  // Lower triangle
+    if (i >= j) // Lower triangle
     {
         int index = Index(i, j);
         return A[index];
     }
-    else  // Upper triangle
+    else // Upper triangle
     {
         return 0;
     }
@@ -215,9 +215,9 @@ void LowerTriangular::Display() const
     }
 
     std::cout << "Lower Triangular Matrix (" << n << "×" << n << "):\n";
-    std::cout << "Storing " << GetStoredElements() << " elements instead of " 
+    std::cout << "Storing " << GetStoredElements() << " elements instead of "
               << (n * n) << "\n";
-    
+
     for (int i = 1; i <= n; i++)
     {
         for (int j = 1; j <= n; j++)
@@ -239,7 +239,7 @@ void LowerTriangular::Input()
     std::cout << "Enter lower triangular elements (row by row):\n";
     for (int i = 1; i <= n; i++)
     {
-        for (int j = 1; j <= i; j++)  // Only j <= i (lower triangle)
+        for (int j = 1; j <= i; j++) // Only j <= i (lower triangle)
         {
             int value;
             std::cout << "Element [" << i << "][" << j << "]: ";
@@ -261,7 +261,7 @@ int LowerTriangular::Trace() const
     int sum = 0;
     for (int i = 1; i <= n; i++)
     {
-        sum += Get(i, i);  // Sum of diagonal elements
+        sum += Get(i, i); // Sum of diagonal elements
     }
     return sum;
 }
@@ -354,7 +354,7 @@ int main()
         LowerTriangular lt(5);
 
         std::cout << "Matrix dimensions: 5×5\n";
-        std::cout << "Storage needed: " << lt.GetStoredElements() 
+        std::cout << "Storage needed: " << lt.GetStoredElements()
                   << " elements (instead of 25)\n\n";
 
         // Fill with example values (like Abdul Bari's lecture)
@@ -388,7 +388,7 @@ int main()
 
         // Try to set upper triangle (should fail)
         std::cout << "=== Testing Upper Triangle Protection ===\n";
-        lt.Set(2, 4, 99);  // Should print error
+        lt.Set(2, 4, 99); // Should print error
 
         std::cout << "\n=== Demo Complete ===\n";
     }
