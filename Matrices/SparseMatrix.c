@@ -6,8 +6,9 @@
 // ============================================================================
 // ABDUL BARI'S SPARSE MATRIX - COMPLETE IMPLEMENTATION
 // ============================================================================
+
 /*
- * SPARSE MATRIX DEFINITION:
+ * SPARSE MATRIX DEFINITION :
  * A matrix is sparse if: Number of ZERO elements >> Number of NON-ZERO elements
  *
  * Example (4×5 matrix with 6 non-zero elements):
@@ -23,16 +24,18 @@
  *  Memory Waste: Storing 14 zeros
  *  Time Waste: Processing zeros in operations
  *
- * SOLUTION: Store only (row, column, value) tuples for non-zero elements
+ * SOLUTION: Store only (row, column, value) tuples for non-zero elements 
  *
  * TWO REPRESENTATIONS:
  * 1. Array Representation (3-tuple / Triplet form)
  * 2. Linked List Representation (Dynamic)
+ * 
  */
 
 // ============================================================================
-// METHOD 1: ARRAY REPRESENTATION (3-TUPLE FORM)
+// METHOD 1: ARRAY REPRESENTATION (3-TUPLE FORM) 
 // ============================================================================
+
 /*
  * STRUCTURE:
  * Store sparse matrix as 2D array of size [3][K]
@@ -53,13 +56,14 @@
 
 typedef struct ArraySparseMatrix
 {
-    int rows;         // Original matrix rows
+    int rows;         // Original matrix rows 
     int cols;         // Original matrix columns
     int nonZeroCount; // Number of non-zero elements
     int **elements;   // 2D array [3][nonZeroCount]
+
 } ArraySparseMatrix;
 
-// Count non-zero elements in matrix
+// Count non-zero elements in matrix :
 int CountNonZero(int **matrix, int rows, int cols)
 {
     int count = 0;

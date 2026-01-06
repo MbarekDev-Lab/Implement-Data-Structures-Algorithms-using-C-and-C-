@@ -7,8 +7,10 @@
 // ============================================================================
 // LOWER TRIANGULAR MATRIX CLASS (ROW-MAJOR)
 // ============================================================================
-/*
- * Lower Triangular Matrix: All elements above diagonal are 0
+
+/**
+ *
+ * Lower Triangular Matrix: All elements above diagonal are 0 :
  *
  * Example (5×5):
  * [ a11  0    0    0    0  ]
@@ -28,6 +30,7 @@
  * - Row i has i elements
  * - Elements before row i: 1+2+...+(i-1) = (i-1)i/2
  * - Position in row i: (j-1)
+ *
  */
 
 class LowerTriangular
