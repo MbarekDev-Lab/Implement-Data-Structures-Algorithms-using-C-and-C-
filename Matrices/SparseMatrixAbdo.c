@@ -61,36 +61,93 @@ void DisplaySparse(struct Sparse s)
     }
 }
 
+struct Sparse *add(struct Sparse *s1, struct Sparse *s2)
+{
+    struct Sparse *sum;
+    int i, j, k;
+    i = j = k = 0;
+
+    sum = (struct Sparse *)malloc(sizeof(struct Sparse));
+    sum->ele = (struct Element *)malloc((s1->num + s2->num) * sizeof(struct Element));
+
+    while (i < s1->num && j < s2->num)
+    {
+        if (s1->ele[i].i < s2->ele[j].i)
+            sum->ele[k++] = s1->ele[i++];
+        else if (s1->ele[i].i > s2->ele[j].i)
+            sum->ele[k++] = s2->ele[j++];
+        else
+        {
+            if (s1->ele[i].j < s2->ele[j].j)
+                sum->ele[k++] = s1->ele[i++];
+            else if (s1->ele[i].j > s2->ele[j].j)
+                sum->ele[k++] = s2->ele[j++];
+            else
+            {
+                sum->ele[k] = s1->ele[i];
+                sum->ele[k++].x = s1->ele[i++].x + s2->ele[j++].x;
+            }
+        }
+    }
+
+    for (; i < s1->num; i++)
+        sum->ele[k++] = s1->ele[i];
+    for (; j < s2->num; j++)
+        sum->ele[k++] = s2->ele[j];
+
+    sum->m = s1->m;
+    sum->n = s1->n;
+    sum->num = k;
+
+    return sum;
+}
+
 int main(void)
 {
     /* code */
 
-    struct Sparse s;
+    struct Sparse s1, s2, *s;
 
-    CreateSparse(&s);
-    DisplaySparse(s);
+    CreateSparse(&s1);
+    CreateSparse(&s2);
+
+    s = add(&s1, &s2);
+    printf("\n");
+    printf "First Matrix:\n";
+    DisplaySparse(s1);
+    printf("\n");
+    printf("Second Matrix:\n");
+    DisplaySparse(s2);
+    printf("\n");
+    printf("Sum Matrix:\n");
+    DisplaySparse(*s);
 
     return 0;
 }
+
+
 /**
- * 
+ *
  * benraiss@MacBookAir Matrices % ./sparse_abdo
 Enter Dimensions: 5 5
 Enter Number of Non-Zero Elements: 5
-Enter all non-zero elements (row column value): 
-0 0 1
-1 0 1
-2 0 1
-3 0 1
-4 0 1
-The Sparse Matrix is: 
-1 0 0 0 0 
-1 0 0 0 0 
-1 0 0 0 0 
-1 0 0 0 0 
-1 0 0 0 0 
-benraiss@MacBookAir Matrices % 
- * 
- * 
- * 
+
+Enter all non-zero elements (row column value):
+    0 0 1
+    1 0 1
+    2 0 1
+    3 0 1
+    4 0 1
+
+The Sparse Matrix is:
+    1 0 0 0 0
+    1 0 0 0 0
+    1 0 0 0 0
+    1 0 0 0 0
+    1 0 0 0 0
+
+benraiss@MacBookAir Matrices %
+ *
+ *
+ *
  */
