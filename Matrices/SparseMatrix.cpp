@@ -1,5 +1,7 @@
 #include <iostream>
 
+using namespace std;
+
 class Element
 {
 private:
@@ -20,6 +22,7 @@ private:
     int n;             // cols
     int num;           // number of non-zero elements
     Element *elements; // array of non-zero elements
+
 public:
     Sparse(int m, int n, int num)
     {
@@ -34,35 +37,41 @@ public:
         delete[] elements;
     }
 
-    void read()
+    friend istream &operator>>(istream &is, Sparse &s);
+    friend ostream &operator<<(ostream &os, Sparse &s);
+};
+
+istream &operator>>(istream &is, Sparse &s)
+{
+    std::cout << "Enter non-zero elements (row, col, value):\n";
+    for (int i = 0; i < s.num; i++)
     {
-        std::cout << "Enter non-zero elements (row, col, value):\n";
-        for (int i = 0; i < num; i++)
+        std::cin >> s.elements[i].i >> s.elements[i].j >> s.elements[i].x;
+    }
+    return is;
+}
+
+ostream &operator<<(ostream &os, Sparse &s)
+{
+    int k = 0;
+    for (int i = 0; i < s.m; i++)
+    {
+        for (int j = 0; j < s.n; j++)
         {
-            std::cin >> elements[i].i >> elements[i].j >> elements[i].x;
+            if (k < s.num && s.elements[k].i == i && s.elements[k].j == j)
+            {
+                std::cout << s.elements[k++].x << " ";
+            }
+            else
+            {
+                std::cout << "0 ";
+            }
         }
+        std::cout << std::endl;
     }
 
-    void display()
-    {
-        int k = 0;
-        for (int i = 0; i < m; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                if (elements[k].i == i && elements[k].j == j)
-                {
-                    std::cout << elements[k++].x << " ";
-                }
-                else
-                {
-                    std::cout << "0 ";
-                }
-            }
-            std::cout << std::endl;
-        }
-    }
-};
+    return os;
+}
 
 int main()
 {
@@ -70,12 +79,14 @@ int main()
     /*int m, n, num;
     std::cout << "Enter rows, cols and number of non-zero elements: ";
     std::cin >> m >> n >> num;
-
-    Sparse s(m, n, num);*/
+    Sparse s(m, n, num);
     s.read();
+    s.display();*/
 
+    std::cin >> s;
     std::cout << "The sparse matrix is:\n";
-    s.display();
+    std::cout << s;
+
     return 0;
 }
 
