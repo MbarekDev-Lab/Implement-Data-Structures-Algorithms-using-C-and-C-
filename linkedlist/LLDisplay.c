@@ -36,6 +36,15 @@ void display(struct Node *p)
     printf("\n");
 }
 
+void RDisplay(struct Node *p)
+{
+    if (p != NULL)
+    {
+        printf("%d ", p->data);
+        RDDisplay(p->next);
+    }
+}
+
 int main()
 {
 
@@ -43,6 +52,9 @@ int main()
     create(A, 5);
     printf("Linked List Elements: ");
     display(first);
-
+    printf("Recursive Display: ");
+    RDisplay(first);
+    printf("\n");
+    
     return 0;
 }
