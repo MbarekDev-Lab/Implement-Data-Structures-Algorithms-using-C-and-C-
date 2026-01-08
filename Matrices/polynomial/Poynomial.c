@@ -101,7 +101,7 @@ int main()
     printf("Sum: ");
     display(*p3);
 
-    cleanup(&p1);
+    cle anup(&p1);
     cleanup(&p2);
     cleanup(p3);
     create(&p1);
