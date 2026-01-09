@@ -7,7 +7,7 @@ struct Node
     struct Node *next;
     struct Node *prev;
 
-} *first;
+} *first = NULL;
 
 void create(int A[], int n)
 {
@@ -167,6 +167,43 @@ int RMin(struct Node *p)
     // return (x < p->data) ? x : p->data;
 }
 
+// Linear Search with Move to Front Optimization
+struct Node *LSearch(struct Node *p, int key)
+{
+    struct Node *q = NULL;
+
+    while (p != 0)
+    {
+        q = p; // previous node
+        if (key == p->data)
+        {
+            // Move to front optimization
+            q->next = p->next;
+            p->next = first;
+            first = p;
+
+            return p;
+        }
+
+        q = p;
+        p = p->next;
+    }
+    return NULL;
+}
+
+struct Node *RSearch(struct Node *p, int key)
+{
+    if (p == NULL)
+    {
+        return NULL;
+    }
+    if (key == p->data)
+    {
+        return p;
+    }
+    return RSearch(p->next, key);
+}
+
 int main()
 {
     int A[] = {3, 5, 7, 10, 30};
@@ -185,11 +222,26 @@ int main()
     printf("Minimum element in Linked List: %d\n", Min(first));
     printf("Recursive Minimum: %d\n", RMin(first));
 
+    struct Node *temp;
+    temp = LSearch(first, 30);
+    temp = LSearch(first, 10);
+    // temp = RSearch(first, 10);
+    if (temp)
+    {
+        printf("Element %d found in Linked List.\n", temp->data);
+    }
+    else
+    {
+        printf("Element not found in Linked List.\n");
+    }
+    display(first);
+
     return 0;
 }
+
 // Output:
 /*
-  benraiss@Mbareks-MacBook-Air linkedlist % clang -std=c17 -Wall -Wextra -o ll_display LLDisplay.c
+    benraiss@Mbareks-MacBook-Air linkedlist % clang -std=c17 -Wall -Wextra -o ll_display LLDisplay.c
     benraiss@Mbareks-MacBook-Air linkedlist % ./ll_display
     Linked List Elements: 3 5 7 10 30
     Recursive Display: 3 5 7 10 30
