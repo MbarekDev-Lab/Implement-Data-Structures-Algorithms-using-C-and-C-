@@ -285,6 +285,44 @@ void Insert(struct Node *p, int index, int value)
     }
 }
 
+void SortedInsert(struct Node *p, int x)
+{
+
+    struct Node *t, *q = NULL;
+
+    t = (struct Node *)malloc(sizeof(struct Node));
+
+    // cpp->  Node* t = new Node;
+
+    t->data = x;
+    t->next = NULL;
+
+    // Insert at beginning
+    if (first == NULL)
+    {
+        first = t;
+    }
+    else
+    {
+        while (p != NULL && p->data < x)
+        {
+            q = p;
+            p = p->next;
+        }
+        // Insert at beginning
+        if (p == first)
+        {
+            t->next = first;
+            first = t;
+        }
+        else
+        {
+            t->next = q->next;
+            q->next = t;
+        }
+    }
+}
+
 int main()
 {
     int A[] = {3, 5, 7, 10, 30};
@@ -316,14 +354,33 @@ int main()
         printf("Element not found in Linked List.\n");
     }
 
+    // Display list after search with move to front
     printf("Linked List after Search (with Move to Front): ");
     display(first);
     printf("\n");
 
+    // Insert at index 0
     printf("Inserting 50 at index 0.\n");
     Insert(first, 0, 50);
     printf("Linked List after Insertion at index 0: ");
     display(first);
+    printf("\n");
+
+    // Insert at index 3
+    printf("Inserting 25 at index 3.\n");
+    Insert(first, 3, 25);
+    printf("Linked List after Insertion at index 3: ");
+    display(first);
+    printf("\n");
+
+    // Sorted Insert
+    printf("Sorted Inserting 15 into Linked List.\n");
+    SortedInsert(first, 15);
+    SortedInsert(first, 2);
+    SortedInsert(first, 35);
+    printf("Linked List after Sorted Insertion of 2 and 15: ");
+    display(first); // 2 15 35
+    printf("\n");
 
     return 0;
 }
