@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
+// ============================================================================
+// NODE STRUCTURE
+// ============================================================================
 struct Node
 {
     int data;
@@ -9,10 +13,14 @@ struct Node
 
 } *first = NULL;
 
+// ============================================================================
+// CREATE LINKED LIST
+// ============================================================================
 void create(int A[], int n)
 {
     int i;
     struct Node *t, *last;
+
     first = (struct Node *)malloc(sizeof(struct Node));
     first->data = A[0];
     first->next = NULL;
@@ -28,6 +36,9 @@ void create(int A[], int n)
     }
 }
 
+// ============================================================================
+// DISPLAY FUNCTIONS
+// ============================================================================
 void display(struct Node *p)
 {
     while (p != NULL)
@@ -38,6 +49,9 @@ void display(struct Node *p)
     printf("\n");
 }
 
+// ============================================================================
+// DISPLAY FUNCTIONS
+// ============================================================================
 void RDisplay(struct Node *p)
 {
     if (p != NULL)
@@ -47,6 +61,9 @@ void RDisplay(struct Node *p)
     }
 }
 
+// ============================================================================
+// COUNT FUNCTIONS
+// ============================================================================
 int count(struct Node *p)
 {
     int l = 0;
@@ -70,6 +87,9 @@ int RCount(struct Node *p)
     }
 }
 
+// ============================================================================
+// SUM FUNCTIONS
+// ============================================================================
 int sum(struct Node *p)
 {
     int s = 0;
@@ -93,9 +113,12 @@ int RSum(struct Node *p)
     }
 }
 
+// ============================================================================
+// MAX FUNCTIONS
+// ============================================================================
 int Max(struct Node *p)
 {
-    int max = INT32_MIN;
+    int max = INT_MIN;
 
     while (p != NULL)
     {
@@ -112,12 +135,12 @@ int RMax(struct Node *p)
 {
     int x = 0;
 
-    if (p == 0)
+    if (p == NULL)
     {
-        return INT32_MIN;
+        return INT_MIN;
     }
-    x = RMax(p->next);
 
+    x = RMax(p->next);
     if (x > p->data)
     {
         return x;
@@ -130,9 +153,12 @@ int RMax(struct Node *p)
     // return (x > p->data) ? x : p->data;
 }
 
+// ============================================================================
+// MIN FUNCTIONS
+// ============================================================================
 int Min(struct Node *p)
 {
-    int min = INT32_MAX;
+    int min = INT_MAX;
 
     while (p != NULL)
     {
@@ -149,12 +175,12 @@ int RMin(struct Node *p)
 {
     int x = 0;
 
-    if (p == 0)
+    if (p == NULL)
     {
-        return INT32_MAX;
+        return INT_MAX;
     }
-    x = RMin(p->next);
 
+    x = RMin(p->next);
     if (x < p->data)
     {
         return x;
@@ -167,21 +193,25 @@ int RMin(struct Node *p)
     // return (x < p->data) ? x : p->data;
 }
 
-// Linear Search with Move to Front Optimization
+// ============================================================================
+// LINEAR SEARCH WITH MOVE TO FRONT OPTIMIZATION
+// ============================================================================
 struct Node *LSearch(struct Node *p, int key)
 {
     struct Node *q = NULL;
 
-    while (p != 0)
+    while (p != NULL)
     {
-        q = p; // previous node
+        // q = p; // previous node
         if (key == p->data)
         {
-            // Move to front optimization
-            q->next = p->next;
-            p->next = first;
-            first = p;
-
+            // Move to front optimization (only if not already first)
+            if (q != NULL)
+            {
+                q->next = p->next;
+                p->next = first;
+                first = p;
+            }
             return p;
         }
 
@@ -191,6 +221,9 @@ struct Node *LSearch(struct Node *p, int key)
     return NULL;
 }
 
+// ============================================================================
+// RECURSIVE SEARCH (NO MOVE TO FRONT)
+// ============================================================================
 struct Node *RSearch(struct Node *p, int key)
 {
     if (p == NULL)
@@ -202,6 +235,54 @@ struct Node *RSearch(struct Node *p, int key)
         return p;
     }
     return RSearch(p->next, key);
+}
+
+// ============================================================================
+// INSERT AT GIVEN INDEX
+// ============================================================================
+
+void Insert(struct Node *p, int index, int value)
+{
+    struct Node *t;
+    int i;
+
+    // Validate index (must be between 0 and length)
+    if (index < 0 || index > count(first))
+    {
+        printf("Invalid index!\n");
+        return;
+    }
+
+    // Create new node
+    t = (struct Node *)malloc(sizeof(struct Node));
+    if (t == NULL)
+    {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+    t->data = value;
+
+    // ========== Insert at beginning (index 0) ==========
+    if (index == 0)
+    {
+        t->next = first;
+        first = t;
+    }
+    // ========== Insert at middle or end ==========
+    else
+    {
+        p = first; // Start from first node
+
+        // Traverse to the node BEFORE insertion point
+        for (i = 0; i < index - 1; i++)
+        {
+            p = p->next;
+        }
+
+        // Link new node into list
+        t->next = p->next;
+        p->next = t;
+    }
 }
 
 int main()
@@ -234,6 +315,14 @@ int main()
     {
         printf("Element not found in Linked List.\n");
     }
+
+    printf("Linked List after Search (with Move to Front): ");
+    display(first);
+    printf("\n");
+
+    printf("Inserting 50 at index 0.\n");
+    Insert(first, 0, 50);
+    printf("Linked List after Insertion at index 0: ");
     display(first);
 
     return 0;
