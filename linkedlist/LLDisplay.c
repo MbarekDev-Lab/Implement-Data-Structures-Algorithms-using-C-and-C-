@@ -323,12 +323,58 @@ void SortedInsert(struct Node *p, int x)
     }
 }
 
+int Delete(struct Node *p, int index)
+{
+    struct Node *q = NULL;
+    int x = -1;
+    int i;
+
+    // Validate index (1 based: valid range is 1 to count)
+    if (index < 1 || index > count(first)) // checking with count function as length is not stored
+    {
+        printf("Invalid index!\n");
+        return -1;
+    }
+
+    // ========== Delete first node (index 1) ==========
+    if (index == 1)
+    {
+        q = first;
+        x = first->data;
+        first = first->next;
+        free(q);
+        return x;
+    }
+    // ========== Delete at middle or end ==========
+    else
+    {
+        p = first;
+
+        // Traverse to the node BEFORE the one to delete
+        for (i = 0; i < index - 1; i++)
+        {
+            // q points to the node before the one to delete
+            // p points to the node to delete
+            
+            q = p;
+            p = p->next;
+        }
+
+        // Unlink and delete
+        q->next = p->next;
+        x = p->data;
+        free(p); // Free memory
+        return x;
+    }
+}
+
 int main()
 {
     int A[] = {3, 5, 7, 10, 30};
     create(A, 5);
     printf("Linked List Elements: ");
     display(first);
+
     printf("Recursive Display: ");
     RDisplay(first);
     printf("\n");
