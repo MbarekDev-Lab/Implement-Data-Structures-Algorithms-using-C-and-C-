@@ -340,6 +340,70 @@ int isSorted(struct Node *p)
     return 1;
 }
 
+void RemoveDuplicates(struct Node *p)
+{
+    struct Node *q; // points to current node, q to next node
+
+    if (p == NULL)
+        return;
+
+    p = first;       // start from head
+    q = first->next; // intialize q to the second node
+
+    // struct Node *p = p->next;
+    while (q != NULL)
+    {
+        if (p->data != q->data)
+        {
+            p = q;       // move p to q
+            q = q->next; // move q to next node
+        }
+        // if duplicate found delete q
+        else
+        {
+            p->next = q->next; // skip q Unlinking the duplicate node
+            // using delete keyword (only in C++) but causes issues in C compilation
+            free(q);     // Free memory of duplicate node
+            q = p->next; // move q to next node
+        }
+    }
+}
+
+/* 
+    Initial: first → [3] → [5] → [5] → [7] → [7] → [10] → NULL
+                      ↑     ↑
+                      p     q
+
+    Step 1: p->data (3) ≠ q->data (5) → Move both forward
+            [3] → [5] → [5] → [7] → [7] → [10] → NULL
+                   ↑     ↑
+                   p     q
+
+    Step 2: p->data (5) == q->data (5) → Delete q
+            [3] → [5] ────→ [7] → [7] → [10] → NULL
+                   ↑         ↑
+                   p         q (after free)
+
+    Step 3: p->data (5) ≠ q->data (7) → Move both forward
+            [3] → [5] → [7] → [7] → [10] → NULL
+                         ↑     ↑
+                         p     q
+
+    Step 4: p->data (7) == q->data (7) → Delete q
+            [3] → [5] → [7] ────→ [10] → NULL
+                        ↑         ↑
+                        p         q
+
+    Step 5: p->data (7) ≠ q->data (10) → Move both forward
+            [3] → [5] → [7] → [10] → NULL
+                                ↑      ↑
+                                p      q
+
+    Step 6: q == NULL → Stop
+
+    Final: [3] → [5] → [7] → [10] → NULL
+*/
+
 // ============================================================================
 // FREE LINKED LIST
 // ============================================================================
@@ -438,6 +502,17 @@ int main()
     printf("═══ IS SORTED? ═══\n");
     printf("Is list sorted? %s\n\n", isSorted(first) ? "YES" : "NO");
 
+    // remove duplicates test (uncomment to test)
+
+    int B[] = {3, 5, 5, 7, 7, 10, 30, 30};
+    create(B, 8);
+    printf("List with duplicates: ");
+    display(first);
+    RemoveDuplicates(first);
+    printf("After removing duplicates: "); // 3 5 7 10 30
+    display(first);
+    printf("\n");
+
     // Cleanup
     freeList(first);
     printf("═══════════════════════════════════════════════════════\n");
@@ -446,7 +521,8 @@ int main()
     return 0;
 }
 
-/** LINKED LIST COMPLETE OPERATIONS DEMO
+/**
+ * LINKED LIST COMPLETE OPERATIONS DEMO
  * benraiss@MacBookAir linkedlist % clang -std=c17 -Wall -Wextra -o ll_display LLDisplay.c
 benraiss@MacBookAir linkedlist % ./ll_display
 ═══════════════════════════════════════════════════════
@@ -491,7 +567,6 @@ Is list sorted? NO
 
 ═══════════════════════════════════════════════════════
 Memory freed successfully!
- *
- *
+
  *
  */
