@@ -1,3 +1,6 @@
+// ============================================================================
+// LINKED LIST - COMPLETE OPERATIONS (Abdul Bari's Method)
+// ============================================================================
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -9,9 +12,7 @@ struct Node
 {
     int data;
     struct Node *next;
-    struct Node *prev;
-
-} *first = NULL;
+} *first = NULL, *second = NULL, *third = NULL;
 
 // ============================================================================
 // CREATE LINKED LIST
@@ -22,6 +23,9 @@ void create(int A[], int n)
     struct Node *t, *last;
 
     first = (struct Node *)malloc(sizeof(struct Node));
+    if (!first)
+        return;
+
     first->data = A[0];
     first->next = NULL;
     last = first;
@@ -29,6 +33,9 @@ void create(int A[], int n)
     for (i = 1; i < n; i++)
     {
         t = (struct Node *)malloc(sizeof(struct Node));
+        if (!t)
+            return;
+
         t->data = A[i];
         t->next = NULL;
         last->next = t;
@@ -49,9 +56,6 @@ void display(struct Node *p)
     printf("\n");
 }
 
-// ============================================================================
-// DISPLAY FUNCTIONS
-// ============================================================================
 void RDisplay(struct Node *p)
 {
     if (p != NULL)
@@ -78,13 +82,9 @@ int count(struct Node *p)
 int RCount(struct Node *p)
 {
     if (p != NULL)
-    {
         return RCount(p->next) + 1;
-    }
     else
-    {
         return 0;
-    }
 }
 
 // ============================================================================
@@ -104,13 +104,9 @@ int sum(struct Node *p)
 int RSum(struct Node *p)
 {
     if (p == NULL)
-    {
         return 0;
-    }
     else
-    {
         return RSum(p->next) + p->data;
-    }
 }
 
 // ============================================================================
@@ -119,13 +115,10 @@ int RSum(struct Node *p)
 int Max(struct Node *p)
 {
     int max = INT_MIN;
-
     while (p != NULL)
     {
         if (p->data > max)
-        {
             max = p->data;
-        }
         p = p->next;
     }
     return max;
@@ -134,23 +127,11 @@ int Max(struct Node *p)
 int RMax(struct Node *p)
 {
     int x = 0;
-
     if (p == NULL)
-    {
         return INT_MIN;
-    }
 
     x = RMax(p->next);
-    if (x > p->data)
-    {
-        return x;
-    }
-    else
-    {
-        return p->data;
-    }
-    // Alternatively, using the conditional operator:
-    // return (x > p->data) ? x : p->data;
+    return (x > p->data) ? x : p->data;
 }
 
 // ============================================================================
@@ -159,13 +140,10 @@ int RMax(struct Node *p)
 int Min(struct Node *p)
 {
     int min = INT_MAX;
-
     while (p != NULL)
     {
         if (p->data < min)
-        {
             min = p->data;
-        }
         p = p->next;
     }
     return min;
@@ -174,23 +152,11 @@ int Min(struct Node *p)
 int RMin(struct Node *p)
 {
     int x = 0;
-
     if (p == NULL)
-    {
         return INT_MAX;
-    }
 
     x = RMin(p->next);
-    if (x < p->data)
-    {
-        return x;
-    }
-    else
-    {
-        return p->data;
-    }
-    // Alternatively, using the conditional operator:
-    // return (x < p->data) ? x : p->data;
+    return (x < p->data) ? x : p->data;
 }
 
 // ============================================================================
@@ -202,10 +168,9 @@ struct Node *LSearch(struct Node *p, int key)
 
     while (p != NULL)
     {
-        // q = p; // previous node
         if (key == p->data)
         {
-            // Move to front optimization (only if not already first)
+            // Move to front (only if not already first)
             if (q != NULL)
             {
                 q->next = p->next;
@@ -214,7 +179,6 @@ struct Node *LSearch(struct Node *p, int key)
             }
             return p;
         }
-
         q = p;
         p = p->next;
     }
@@ -222,38 +186,31 @@ struct Node *LSearch(struct Node *p, int key)
 }
 
 // ============================================================================
-// RECURSIVE SEARCH (NO MOVE TO FRONT)
+// RECURSIVE SEARCH
 // ============================================================================
 struct Node *RSearch(struct Node *p, int key)
 {
     if (p == NULL)
-    {
         return NULL;
-    }
     if (key == p->data)
-    {
         return p;
-    }
     return RSearch(p->next, key);
 }
 
 // ============================================================================
-// INSERT AT GIVEN INDEX
+// INSERT AT GIVEN INDEX (0-BASED)
 // ============================================================================
-
 void Insert(struct Node *p, int index, int value)
 {
     struct Node *t;
     int i;
 
-    // Validate index (must be between 0 and length)
     if (index < 0 || index > count(first))
     {
         printf("Invalid index!\n");
         return;
     }
 
-    // Create new node
     t = (struct Node *)malloc(sizeof(struct Node));
     if (t == NULL)
     {
@@ -262,81 +219,84 @@ void Insert(struct Node *p, int index, int value)
     }
     t->data = value;
 
-    // ========== Insert at beginning (index 0) ==========
     if (index == 0)
     {
         t->next = first;
         first = t;
     }
-    // ========== Insert at middle or end ==========
     else
     {
-        p = first; // Start from first node
-
-        // Traverse to the node BEFORE insertion point
+        p = first;
         for (i = 0; i < index - 1; i++)
-        {
             p = p->next;
-        }
 
-        // Link new node into list
         t->next = p->next;
         p->next = t;
     }
 }
 
+// ============================================================================
+// SORTED INSERT
+// ============================================================================
 void SortedInsert(struct Node *p, int x)
 {
-
     struct Node *t, *q = NULL;
 
     t = (struct Node *)malloc(sizeof(struct Node));
-
-    // cpp->  Node* t = new Node;
+    if (t == NULL)
+    {
+        printf("Memory allocation failed!\n");
+        return;
+    }
 
     t->data = x;
     t->next = NULL;
 
-    // Insert at beginning
+    // Empty list
     if (first == NULL)
     {
         first = t;
+        return;
     }
+
+    // Find insertion point
+    p = first; // Fixed: Initialize p to first
+    while (p != NULL && p->data < x)
+    {
+        q = p;
+        p = p->next;
+    }
+
+    // Insert at beginning
+    if (p == first)
+    {
+        t->next = first;
+        first = t;
+    }
+    // Insert at middle or end
     else
     {
-        while (p != NULL && p->data < x)
-        {
-            q = p;
-            p = p->next;
-        }
-        // Insert at beginning
-        if (p == first)
-        {
-            t->next = first;
-            first = t;
-        }
-        else
-        {
-            t->next = q->next;
-            q->next = t;
-        }
+        t->next = q->next;
+        q->next = t;
     }
 }
 
+// ============================================================================
+// DELETE AT GIVEN INDEX (1 BASED)
+// ============================================================================
 int Delete(struct Node *p, int index)
 {
     struct Node *q = NULL;
     int x = -1;
     int i;
 
-    // Validate index (1 based: valid range is 1 to count)
-    if (index < 1 || index > count(first)) // checking with count function as length is not stored
+    if (index < 1 || index > count(first))
     {
         printf("Invalid index!\n");
         return -1;
     }
 
-    // ========== Delete first node (index 1) ==========
+    // Delete first node
     if (index == 1)
     {
         q = first;
@@ -345,104 +305,193 @@ int Delete(struct Node *p, int index)
         free(q);
         return x;
     }
-    // ========== Delete at middle or end ==========
+    // Delete at middle or end
     else
     {
         p = first;
-
-        // Traverse to the node BEFORE the one to delete
         for (i = 0; i < index - 1; i++)
         {
-            // q points to the node before the one to delete
-            // p points to the node to delete
-            
             q = p;
             p = p->next;
         }
 
-        // Unlink and delete
         q->next = p->next;
         x = p->data;
-        free(p); // Free memory
+        free(p);
         return x;
     }
 }
 
+// ============================================================================
+// CHECK IF SORTED
+// ============================================================================
+int isSorted(struct Node *p)
+{
+    int x = INT_MIN; // Fixed: Use INT_MIN instead of -65536
+
+    while (p != NULL)
+    {
+        if (p->data < x)
+            return 0;
+
+        x = p->data;
+        p = p->next;
+    }
+    return 1;
+}
+
+// ============================================================================
+// FREE LINKED LIST
+// ============================================================================
+void freeList(struct Node *p)
+{
+    struct Node *temp;
+    while (p)
+    {
+        temp = p;
+        p = p->next;
+        free(temp);
+    }
+}
+
+// ============================================================================
+// MAIN FUNCTION
+// ============================================================================
 int main()
 {
+    printf("═══════════════════════════════════════════════════════\n");
+    printf("  LINKED LIST - COMPLETE OPERATIONS DEMO\n");
+    printf("═══════════════════════════════════════════════════════\n\n");
+
     int A[] = {3, 5, 7, 10, 30};
     create(A, 5);
-    printf("Linked List Elements: ");
-    display(first);
 
+    printf("Original List: ");
+    display(first);
     printf("Recursive Display: ");
     RDisplay(first);
-    printf("\n");
-    printf("Number of elements in Linked List: %d\n", count(first));
-    printf("Recursive Count: %d\n", RCount(first));
-    printf("Sum of elements in Linked List: %d\n", sum(first));
-    printf("Recursive Sum: %d\n", RSum(first));
-    printf("Maximum element in Linked List: %d\n", Max(first));
-    printf("Recursive Maximum: %d\n", RMax(first));
-    printf("Minimum element in Linked List: %d\n", Min(first));
-    printf("Recursive Minimum: %d\n", RMin(first));
+    printf("\n\n");
 
+    // Count & Sum
+    printf("═══ COUNT & SUM ═══\n");
+    printf("Count (Iterative): %d\n", count(first));
+    printf("Count (Recursive): %d\n", RCount(first));
+    printf("Sum (Iterative): %d\n", sum(first));
+    printf("Sum (Recursive): %d\n\n", RSum(first));
+
+    // Max & Min
+    printf("═══ MAX & MIN ═══\n");
+    printf("Max (Iterative): %d\n", Max(first));
+    printf("Max (Recursive): %d\n", RMax(first));
+    printf("Min (Iterative): %d\n", Min(first));
+    printf("Min (Recursive): %d\n\n", RMin(first));
+
+    // Search with Move-to-Front
+    printf("═══ SEARCH OPERATIONS ═══\n");
     struct Node *temp;
     temp = LSearch(first, 30);
+    printf("After searching 30: ");
+    display(first);
+
     temp = LSearch(first, 10);
-    // temp = RSearch(first, 10);
     if (temp)
-    {
-        printf("Element %d found in Linked List.\n", temp->data);
-    }
-    else
-    {
-        printf("Element not found in Linked List.\n");
-    }
-
-    // Display list after search with move to front
-    printf("Linked List after Search (with Move to Front): ");
+        printf("Element %d found!\n", temp->data);
+    printf("After searching 10 (Move-to-Front): ");
     display(first);
     printf("\n");
 
-    // Insert at index 0
-    printf("Inserting 50 at index 0.\n");
+    // Insert Operations
+    printf("═══ INSERT OPERATIONS ═══\n");
     Insert(first, 0, 50);
-    printf("Linked List after Insertion at index 0: ");
+    printf("After inserting 50 at index 0: ");
     display(first);
-    printf("\n");
 
-    // Insert at index 3
-    printf("Inserting 25 at index 3.\n");
     Insert(first, 3, 25);
-    printf("Linked List after Insertion at index 3: ");
+    printf("After inserting 25 at index 3: ");
     display(first);
     printf("\n");
 
     // Sorted Insert
-    printf("Sorted Inserting 15 into Linked List.\n");
+    printf("═══ SORTED INSERT ═══\n");
     SortedInsert(first, 15);
+    printf("After sorted insert 15: ");
+    display(first);
+
     SortedInsert(first, 2);
+    printf("After sorted insert 2: ");
+    display(first);
+
     SortedInsert(first, 35);
-    printf("Linked List after Sorted Insertion of 2 and 15: ");
-    display(first); // 2 15 35
+    printf("After sorted insert 35: ");
+    display(first);
     printf("\n");
+
+    // Delete Operation
+    printf("═══ DELETE OPERATIONS ═══\n");
+    int deletedValue = Delete(first, 4);
+    printf("Deleted value at index 4: %d\n", deletedValue);
+    printf("After deletion: ");
+    display(first);
+    printf("\n");
+
+    // Check if sorted
+    printf("═══ IS SORTED? ═══\n");
+    printf("Is list sorted? %s\n\n", isSorted(first) ? "YES" : "NO");
+
+    // Cleanup
+    freeList(first);
+    printf("═══════════════════════════════════════════════════════\n");
+    printf("Memory freed successfully!\n");
 
     return 0;
 }
 
-// Output:
-/*
-    benraiss@Mbareks-MacBook-Air linkedlist % clang -std=c17 -Wall -Wextra -o ll_display LLDisplay.c
-    benraiss@Mbareks-MacBook-Air linkedlist % ./ll_display
-    Linked List Elements: 3 5 7 10 30
-    Recursive Display: 3 5 7 10 30
-    Number of elements in Linked List: 5
-    Recursive Count: 5
-    Sum of elements in Linked List: 55
-    Recursive Sum: 55
-    Maximum element in Linked List: 30 //max iterative version works too
-    Recursive Maximum: 30 // max recursive version works too
-    Minimum element in Linked List: 3 // min iterative version
-    Recursive Minimum: 3 // min recursive version
-  */
+/** LINKED LIST COMPLETE OPERATIONS DEMO
+ * benraiss@MacBookAir linkedlist % clang -std=c17 -Wall -Wextra -o ll_display LLDisplay.c
+benraiss@MacBookAir linkedlist % ./ll_display
+═══════════════════════════════════════════════════════
+  LINKED LIST - COMPLETE OPERATIONS DEMO
+═══════════════════════════════════════════════════════
+
+Original List: 3 5 7 10 30
+Recursive Display: 3 5 7 10 30
+
+═══ COUNT & SUM ═══
+Count (Iterative): 5
+Count (Recursive): 5
+Sum (Iterative): 55
+Sum (Recursive): 55
+
+═══ MAX & MIN ═══
+Max (Iterative): 30
+Max (Recursive): 30
+Min (Iterative): 3
+Min (Recursive): 3
+
+═══ SEARCH OPERATIONS ═══
+After searching 30: 30 3 5 7 10
+Element 10 found!
+After searching 10 (Move-to-Front): 10 30 3 5 7
+
+═══ INSERT OPERATIONS ═══
+After inserting 50 at index 0: 50 10 30 3 5 7
+After inserting 25 at index 3: 50 10 30 25 3 5 7
+
+═══ SORTED INSERT ═══
+After sorted insert 15: 15 50 10 30 25 3 5 7
+After sorted insert 2: 2 15 50 10 30 25 3 5 7
+After sorted insert 35: 2 15 35 50 10 30 25 3 5 7
+
+═══ DELETE OPERATIONS ═══
+Deleted value at index 4: 50
+After deletion: 2 15 35 10 30 25 3 5 7
+
+═══ IS SORTED? ═══
+Is list sorted? NO
+
+═══════════════════════════════════════════════════════
+Memory freed successfully!
+ *
+ *
+ *
+ */
