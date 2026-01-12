@@ -260,7 +260,7 @@ void SortedInsert(struct Node *p, int x)
     }
 
     // Find insertion point
-    p = first; // Fixed: Initialize p to first
+    p = first;
     while (p != NULL && p->data < x)
     {
         q = p;
@@ -340,6 +340,9 @@ int isSorted(struct Node *p)
     return 1;
 }
 
+// ============================================================================
+// REMOVE DUPLICATES FROM SORTED LINKED LIST
+// ============================================================================
 void RemoveDuplicates(struct Node *p)
 {
     struct Node *q; // points to current node, q to next node
@@ -369,7 +372,7 @@ void RemoveDuplicates(struct Node *p)
     }
 }
 
-/* 
+/*
     Initial: first → [3] → [5] → [5] → [7] → [7] → [10] → NULL
                       ↑     ↑
                       p     q
@@ -403,6 +406,130 @@ void RemoveDuplicates(struct Node *p)
 
     Final: [3] → [5] → [7] → [10] → NULL
 */
+
+void RemoveDuplicatesUnsorted(struct Node *p)
+{
+    struct Node *q, *r;
+
+    if (p == NULL)
+        return;
+
+    r = p;
+    while (r != NULL && r->next != NULL)
+    {
+        q = r;
+        while (q->next != NULL)
+        {
+            if (r->data == q->next->data)
+            {
+                struct Node *temp = q->next;
+                q->next = q->next->next;
+                free(temp);
+            }
+            else
+            {
+                q = q->next;
+            }
+        }
+        r = r->next;
+    }
+}
+
+// ============================================================================
+// REVERSE LINKED LIST // O(N) TIME & O(1) SPACE
+// ============================================================================
+
+void ReverseListByData(struct Node *p)
+{
+    int i = 0;
+    int *A;
+    int n = count(first);
+
+    A = (int *)malloc(sizeof(int) * n);
+    p = first;
+
+    while (p != NULL)
+    {
+        A[i] = p->data;
+        p = p->next;
+        i++;
+    }
+
+    p = first;
+    i--;
+
+    while (p != NULL)
+    {
+        p->data = A[i--];
+        p = p->next;
+    }
+
+    free(A);
+}
+
+void ReverseListByPointer(struct Node *p)
+{
+    struct Node *q = NULL, *r = NULL;
+    p = first;
+
+    while (p != NULL)
+    {
+        r = q;
+        q = p;
+        p = p->next;
+        q->next = r;
+    }
+    first = q;
+    return;
+}
+
+// ============================================================================
+// REVERSE LINKED LIST USING SLIDING POINTERS (Iterative)
+// ============================================================================
+void IReverseList(struct Node *p)
+{
+    struct Node *q = NULL, *r = NULL;
+
+    p = first;
+
+    while (p != NULL)
+    {
+        r = q;
+        q = p;
+        p = p->next;
+        q->next = r;
+    }
+    first = q;
+}
+
+void IIReverseList(struct Node *p)
+{
+    struct Node *q = NULL, *r = NULL;
+    p = first;
+
+    while (p != NULL)
+    {
+        r = q;
+        q = p;
+        p = p->next;
+        q->next = r;
+    }
+    first = q;
+}
+
+// reverse using recursion
+struct Node *RReverseList(struct Node *q, struct Node *p)
+{
+    if (p != NULL)
+    {
+        RReverseList(p, p->next);
+        p->next = q;
+    }
+    else
+        first = q;
+
+    return first;
+}
 
 // ============================================================================
 // FREE LINKED LIST
@@ -513,6 +640,41 @@ int main()
     display(first);
     printf("\n");
 
+    // Reverse List
+    printf("═══ REVERSE LIST By POINTER & DATA ═══\n");
+    printf("Original List: ");
+    display(first);
+    ReverseListByPointer(first);
+    printf("After reversing by pointer: ");
+    display(first);
+    printf("\n");
+
+    // Reverse List by Data
+    ReverseListByData(first);
+    printf("After reversing by data: ");
+    display(first);
+    printf("\n");
+
+    // Reverse List using Sliding Pointers
+    printf("═══ REVERSE LIST USING SLIDING POINTERS ═══\n");
+    IReverseList(first);
+    printf("After reversing by sliding pointers: ");
+    display(first);
+    printf("\n");
+
+    // Reverse List using Iterative Sliding Pointers 2
+    IIReverseList(first);
+
+    printf("After reversing by sliding pointers II: ");
+    display(first);
+    printf("\n");
+
+    // Reverse List using Recursion
+    RReverseList(NULL, first);
+    printf("After reversing by recursion: ");
+    display(first);
+    printf("\n");
+
     // Cleanup
     freeList(first);
     printf("═══════════════════════════════════════════════════════\n");
@@ -522,8 +684,7 @@ int main()
 }
 
 /**
- * LINKED LIST COMPLETE OPERATIONS DEMO
- * benraiss@MacBookAir linkedlist % clang -std=c17 -Wall -Wextra -o ll_display LLDisplay.c
+benraiss@MacBookAir linkedlist % clang -std=c17 -Wall -Wextra -o ll_display LLDisplay.c
 benraiss@MacBookAir linkedlist % ./ll_display
 ═══════════════════════════════════════════════════════
   LINKED LIST - COMPLETE OPERATIONS DEMO
@@ -565,8 +726,23 @@ After deletion: 2 15 35 10 30 25 3 5 7
 ═══ IS SORTED? ═══
 Is list sorted? NO
 
+List with duplicates: 3 5 5 7 7 10 30 30
+After removing duplicates: 3 5 7 10 30
+
+═══ REVERSE LIST By POINTER & DATA ═══
+Original List: 3 5 7 10 30
+After reversing by pointer: 30 10 7 5 3
+
+After reversing by data: 3 5 7 10 30
+
+═══ REVERSE LIST USING SLIDING POINTERS ═══
+After reversing by sliding pointers: 30 10 7 5 3
+
+After reversing by sliding pointers II: 3 5 7 10 30
+
+After reversing by recursion: 30 10 7 5 3
+
 ═══════════════════════════════════════════════════════
 Memory freed successfully!
-
- *
+benraiss@MacBookAir linkedlist %
  */
