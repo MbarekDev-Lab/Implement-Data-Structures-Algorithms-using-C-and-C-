@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <stdbool.h> // this library is for boolean data type (true/false)
 
 // ============================================================================
 // NODE STRUCTURE
@@ -557,11 +558,12 @@ struct Node *RReverseList(struct Node *q, struct Node *p)
     return first;
 }
 
-// Merge and concatenate two sorted linked lists
+// Merge and concatenate two sorted linked lists -> concatenation is O(n) but merge is O(m+n)
 // ============================================================================
-// CONCATENATE   AND MERGE TWO LINKED LISTS
+// CONCATENATE   AND MERGE TWO LINKED LISTS O(n) time , O(1) extra space
 // ============================================================================
 // Concatenate two linked lists and return head of new list
+//.lists->             first,        second
 void Concat(struct Node *p, struct Node *q)
 {
     third = p;
@@ -614,6 +616,33 @@ void Merge(struct Node *p, struct Node *q)
         last->next = p;
     if (q)
         last->next = q;
+}
+
+// ============================================================================
+// DETECT LOOP IN LINKED LIST Time O(n) , Space O(1)
+// ============================================================================
+bool isLoop(struct Node *f)
+{
+    struct Node *p, *q;
+    p = q = f;
+
+    do
+    {
+        p = p->next; // move by one pointer
+        q = q->next; // move by two pointers
+        q = q ? q->next : q;
+    } while (p && q && p != q);
+
+    if (p == q)
+    {
+        printf("Loop detected in linked list\n");
+        return true;
+    }
+    else
+    {
+        printf("No loop in linked list\n");
+        return false;
+    }
 }
 
 // ============================================================================
@@ -762,7 +791,7 @@ int main()
     printf("\n");*/
 
     // merge two lists test
-    int A[] = {3, 5, 7, 10, 30};
+    /*int A[] = {3, 5, 7, 10, 30};
     createFirst(A, 5);
 
     int B[] = {3, 5, 5, 7, 7, 10, 30, 30};
@@ -775,7 +804,7 @@ int main()
     display(second);
     printf("\n");
 
-    /*
+
     Concat(first, second);
     printf("After Concatenation: ");
     display(third);
@@ -783,12 +812,11 @@ int main()
         First List: 3 5 7 10 30
         Second List: 3 5 5 7 7 10 30 30
         After Concatenation: 3 5 7 10 30 3 5 5 7 7 10 30 30
-    */
 
     Merge(first, second);
     printf("After Merge: ");
     display(third);
-    printf("\n");
+    printf("\n");*/
 
     /*
         First List: 3 5 7 10 30
@@ -796,7 +824,28 @@ int main()
         After Merge: 3 3 5 5 5 7 7 7 10 10 30 30 30
     */
 
+    // Detect Loop
+    // Create a loop for testing
+    int L[] = {1, 2, 3, 4, 5};
+    createFirst(L, 5); // 1 2 3 4 5
+
+    struct Node *t1, *t2;
+    t1 = first->next->next;             // 3rd node
+    t2 = first->next->next->next->next; // 5th node
+    t2->next = t1;                      // Create loop for testing 5 -> 3
+
+    printf("═══ DETECT LOOP IN LINKED LIST ═══\n");
+    printf("Checking for loop in linked list... %s\n", isLoop(first) ? "Loop detected" : "No loop detected");
+
+    printf("\n");
+
+    /*
+            Loop detected in linked list
+            Checking for loop in linked list... Loop detected
+    */
+
     // Cleanup
+    t2->next = NULL; // Break the loop before freeing
     freeList(first);
     printf("═══════════════════════════════════════════════════════\n");
     printf("Memory freed successfully!\n");
