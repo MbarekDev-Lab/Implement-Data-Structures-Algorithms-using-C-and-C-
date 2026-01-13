@@ -109,9 +109,9 @@ istream &operator>>(istream &is, Sparse &s)
 ostream &operator<<(ostream &os, Sparse &s)
 {
     int k = 0;
-    for (int i = 0; i < s.m; i++)
+    for (int i = 0; i < s.m; ++i)
     {
-        for (int j = 0; j < s.n; j++)
+        for (int j = 0; j < s.n; ++j)
         {
             if (k < s.num && s.elements[k].i == i && s.elements[k].j == j)
             {
