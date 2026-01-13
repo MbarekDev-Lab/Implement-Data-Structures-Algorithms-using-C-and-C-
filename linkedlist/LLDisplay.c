@@ -17,7 +17,7 @@ struct Node
 // ============================================================================
 // CREATE LINKED LIST
 // ============================================================================
-void create(int A[], int n)
+void createFirst(int A[], int n)
 {
     int i;
     struct Node *t, *last;
@@ -37,6 +37,32 @@ void create(int A[], int n)
             return;
 
         t->data = A[i];
+        t->next = NULL;
+        last->next = t;
+        last = t;
+    }
+}
+
+void createSecond(int B[], int n)
+{
+    int i;
+    struct Node *t, *last;
+
+    second = (struct Node *)malloc(sizeof(struct Node));
+    if (!second)
+        return;
+
+    second->data = B[0];
+    second->next = NULL;
+    last = second;
+
+    for (i = 1; i < n; i++)
+    {
+        t = (struct Node *)malloc(sizeof(struct Node));
+        if (!t)
+            return;
+
+        t->data = B[i];
         t->next = NULL;
         last->next = t;
         last = t;
@@ -531,6 +557,65 @@ struct Node *RReverseList(struct Node *q, struct Node *p)
     return first;
 }
 
+// Merge and concatenate two sorted linked lists
+// ============================================================================
+// CONCATENATE   AND MERGE TWO LINKED LISTS
+// ============================================================================
+// Concatenate two linked lists and return head of new list
+void Concat(struct Node *p, struct Node *q)
+{
+    third = p;
+
+    while (p->next != NULL)
+    {
+        /* code */
+        p = p->next;
+    }
+    p->next = q;
+}
+
+//.lists->    first, second
+void Merge(struct Node *p, struct Node *q)
+{
+    struct Node *last;
+
+    if (p->data < q->data)
+    {
+        third = last = p;
+        p = p->next;
+        last->next = NULL;
+    }
+    else
+    {
+        third = last = q;
+        q = q->next;
+        last->next = NULL;
+    }
+
+    while (p && q)
+    {
+        if (p->data < q->data)
+        {
+            last->next = p;
+            last = p;
+            p = p->next;
+            last->next = NULL;
+        }
+        else
+        {
+            last->next = q;
+            last = q;
+            q = q->next;
+            last->next = NULL;
+        }
+    }
+
+    if (p)
+        last->next = p;
+    if (q)
+        last->next = q;
+}
+
 // ============================================================================
 // FREE LINKED LIST
 // ============================================================================
@@ -554,8 +639,11 @@ int main()
     printf("  LINKED LIST - COMPLETE OPERATIONS DEMO\n");
     printf("═══════════════════════════════════════════════════════\n\n");
 
-    int A[] = {3, 5, 7, 10, 30};
-    create(A, 5);
+    /*int A[] = {3, 5, 7, 10, 30};
+    createFirst(A, 5);
+
+    int B[] = {3, 5, 5, 7, 7, 10, 30, 30};
+    createSecond(B, 8);
 
     printf("Original List: ");
     display(first);
@@ -631,8 +719,6 @@ int main()
 
     // remove duplicates test (uncomment to test)
 
-    int B[] = {3, 5, 5, 7, 7, 10, 30, 30};
-    create(B, 8);
     printf("List with duplicates: ");
     display(first);
     RemoveDuplicates(first);
@@ -673,7 +759,42 @@ int main()
     RReverseList(NULL, first);
     printf("After reversing by recursion: ");
     display(first);
+    printf("\n");*/
+
+    // merge two lists test
+    int A[] = {3, 5, 7, 10, 30};
+    createFirst(A, 5);
+
+    int B[] = {3, 5, 5, 7, 7, 10, 30, 30};
+    createSecond(B, 8);
+
+    printf("First List: ");
+    display(first);
+    printf("\n \n");
+    printf("Second List: ");
+    display(second);
     printf("\n");
+
+    /*
+    Concat(first, second);
+    printf("After Concatenation: ");
+    display(third);
+    printf("\n");
+        First List: 3 5 7 10 30
+        Second List: 3 5 5 7 7 10 30 30
+        After Concatenation: 3 5 7 10 30 3 5 5 7 7 10 30 30
+    */
+
+    Merge(first, second);
+    printf("After Merge: ");
+    display(third);
+    printf("\n");
+
+    /*
+        First List: 3 5 7 10 30
+        Second List: 3 5 5 7 7 10 30 30
+        After Merge: 3 3 5 5 5 7 7 7 10 10 30 30 30
+    */
 
     // Cleanup
     freeList(first);
