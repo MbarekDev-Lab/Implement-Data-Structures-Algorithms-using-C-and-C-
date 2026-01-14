@@ -28,6 +28,33 @@ void createCircularLinkedList(int A[], int n)
     }
 }
 
+int LengthLL(struct Node *p)
+{
+    int len = 0;
+
+    if (p == NULL)
+        return 0;
+
+    do
+    {
+
+        len++;
+        p = p->next;
+    } while (p != Head);
+
+    /*
+    struct Node *temp = p;
+    do
+        {
+            len++;
+            temp = temp->next;
+        } while (temp != p);
+
+
+    */
+    return len;
+}
+
 void DisplayCircularLinkedList(struct Node *h)
 {
     struct Node *p = h;
@@ -59,6 +86,47 @@ void RDisplayCircularLinkedList(struct Node *h)
     flag = 0; // Reset flag for future calls
 }
 
+void InsertAtGivenPosition(struct Node *p, int index, int x)
+{
+    struct Node *t = NULL;
+
+    if (index < 0 || index > LengthLL(p))
+        return;
+
+    // Inserting at head (index 0)
+    if (index == 0)
+    {
+        t = (struct Node *)malloc(sizeof(struct Node));
+        t->data = x;
+
+        if (Head == NULL)
+        {
+            Head = t;
+            Head->next = Head;
+        }
+        else
+        {
+            while (p->next != Head)
+            {
+                p = p->next;
+            }
+            p->next = t;
+            t->next = Head;
+            Head = t;
+        }
+    }
+
+    for (int i = 0; i < index - 1; i++)
+    {
+        p = p->next;
+    }
+
+    t = (struct Node *)malloc(sizeof(struct Node));
+    t->data = x;
+    t->next = p->next;
+    p->next = t;
+}
+
 int main()
 {
     int A[] = {10, 20, 30, 40, 50};
@@ -69,5 +137,24 @@ int main()
     RDisplayCircularLinkedList(Head);
     printf("\n");
 
+    InsertAtGivenPosition(Head, 2, 500);
+    DisplayCircularLinkedList(Head);
+
     return 0;
 }
+
+/*
+benraiss@MacBookAir CircularLinkedList % clang -std=c17 -Wall -Wextra -o circular_ll CircularLL.c
+benraiss@MacBookAir CircularLinkedList % ./circular_ll
+10 -> 20 -> 30 -> 40 -> 50 ->
+500 -> 10 -> 20 -> 30 -> 40 -> 50 -> 500 -> (head: 500)
+benraiss@MacBookAir CircularLinkedList % clang -std=c17 -Wall -Wextra -o circular_ll CircularLL.c
+benraiss@MacBookAir CircularLinkedList % ./circular_ll
+10 -> 20 -> 30 -> 40 -> 50 ->
+10 -> 20 -> 30 -> 40 -> 50 -> 500 -> (head: 10)
+benraiss@MacBookAir CircularLinkedList % clang -std=c17 -Wall -Wextra -o circular_ll CircularLL.c
+benraiss@MacBookAir CircularLinkedList % ./circular_ll
+10 -> 20 -> 30 -> 40 -> 50 ->
+10 -> 20 -> 500 -> 30 -> 40 -> 50 -> (head: 10)
+benraiss@MacBookAir CircularLinkedList %
+*/
