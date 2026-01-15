@@ -120,6 +120,57 @@ void insertNode(struct Node *p, int index, int x)
 }
 
 // ============================================================================
+//  DELETE NODE AT GIVEN POSTION DOUBLY LINKED LIST
+// ============================================================================
+
+int deleteNode(struct Node *p, int index)
+{
+    // struct Node *q = NULL;
+    int i, x = -1;
+
+    if (index < 1 || index > length(first))
+    {
+        printf("Invalid index!\n");
+        return -1;
+    }
+
+    // Delete first node
+    if (index == 1)
+    {
+        p = first;
+        first = first->next;
+        if (first != NULL)
+        {
+            first->prev = NULL;
+        }
+
+        x = p->data;
+        free(p);
+        return x;
+    }
+    // Delete at middle or end
+    else
+    {
+        p = first;
+        for (i = 0; i < index - 1; i++)
+        {
+            p = p->next;
+        }
+
+        p->prev->next = p->next;
+
+        if (p->next != NULL)
+        {
+            p->next->prev = p->prev;
+        }
+
+        x = p->data;
+        free(p);
+        return x; // retturn deleted value
+    }
+}
+
+// ============================================================================
 // DISPLAY FORWARD
 // ============================================================================
 void displayForward(struct Node *p)
@@ -198,6 +249,14 @@ int main()
     insertNode(first, 5, 25);
     printf("\n");
 
+    printf("══ deleting node at a given position ══\n");
+
+    printf("deleting nodes at index 2 and 4:\n");
+    printf("\n");
+
+    deleteNode(first, 2);
+    deleteNode(first, 4);
+
     printf("\nLenght is : %d\n", length(first));
 
     printf("═══ DISPLAY FORWARD ═══\n");
@@ -223,61 +282,33 @@ int main()
 }
 
 /*
-benraiss@MacBookAir DoublyLL % clang -std=c17 -Wall -Wextra -o doubly_ll DoublyLL.c
-benraiss@MacBookAir DoublyLL % ./doubly_ll
-═══════════════════════════════════════════════════════
-  DOUBLY LINKED LIST - OPERATIONS DEMO
-═══════════════════════════════════════════════════════
+    ═══════════════════════════════════════════════════════
+    DOUBLY LINKED LIST - OPERATIONS DEMO
+    ═══════════════════════════════════════════════════════
 
-Creating doubly linked list from array: 10 20 30 40 50
+    Creating doubly linked list from array: 10 20 30 40 50
 
-Inserting 25 at index 5:
+    Inserting 25 at index 3 and 5:
 
-
-Lenght is : 6
-═══ DISPLAY FORWARD ═══
-Forward: NULL <-> 10 <-> 20 <-> 30 <-> 40 <-> 50 <-> 25 <-> NULL
-
-═══ DISPLAY BACKWARD ═══
-Backward: NULL <-> 25 <-> 50 <-> 40 <-> 30 <-> 20 <-> 10 <-> NULL
-
-═══ LIST LENGTH ═══
-Length: 6
-
-═══ MEMORY STRUCTURE (Conceptual) ═══
-NULL <-> [10] <-> [20] <-> [30] <-> [40] <-> [50] <-> NULL
-       ↑                                          ↑
-     first                                      last
-
-═══════════════════════════════════════════════════════
-Program completed successfully!
-benraiss@MacBookAir DoublyLL % clang -std=c17 -Wall -Wextra -o doubly_ll DoublyLL.c
-benraiss@MacBookAir DoublyLL % ./doubly_ll
-═══════════════════════════════════════════════════════
-  DOUBLY LINKED LIST - OPERATIONS DEMO
-═══════════════════════════════════════════════════════
-
-Creating doubly linked list from array: 10 20 30 40 50
-
-Inserting 25 at index 3:
+    ══ deleting node at a given position ══
+    deleting nodes at index 2 and 4:
 
 
-Lenght is : 6
-═══ DISPLAY FORWARD ═══
-Forward: NULL <-> 10 <-> 20 <-> 30 <-> 25 <-> 40 <-> 50 <-> NULL
+    Lenght is : 5
+    ═══ DISPLAY FORWARD ═══
+    Forward: NULL <-> 10 <-> 30 <-> 25 <-> 25 <-> 50 <-> NULL
 
-═══ DISPLAY BACKWARD ═══
-Backward: NULL <-> 50 <-> 40 <-> 25 <-> 30 <-> 20 <-> 10 <-> NULL
+    ═══ DISPLAY BACKWARD ═══
+    Backward: NULL <-> 50 <-> 25 <-> 25 <-> 30 <-> 10 <-> NULL
 
-═══ LIST LENGTH ═══
-Length: 6
+    ═══ LIST LENGTH ═══
+    Length: 5
 
-═══ MEMORY STRUCTURE (Conceptual) ═══
-NULL <-> [10] <-> [20] <-> [30] <-> [40] <-> [50] <-> NULL
-       ↑                                          ↑
-     first                                      last
+    ═══ MEMORY STRUCTURE (Conceptual) ═══
+    NULL <-> [10] <-> [20] <-> [30] <-> [40] <-> [50] <-> NULL
+        ↑                                          ↑
+        first                                      last
 
-═══════════════════════════════════════════════════════
-Program completed successfully!
-benraiss@MacBookAir DoublyLL %
+    ═══════════════════════════════════════════════════════
+    Program completed successfully!
 */
