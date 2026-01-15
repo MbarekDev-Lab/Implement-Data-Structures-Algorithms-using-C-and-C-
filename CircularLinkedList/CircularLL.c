@@ -127,6 +127,61 @@ void InsertAtGivenPosition(struct Node *p, int index, int x)
     p->next = t;
 }
 
+// ============================================================================
+// DELETE AT GIVEN INDEX (1 BASED)
+// ============================================================================
+int CircularDelete(struct Node *p, int index)
+{
+    struct Node *q = NULL;
+    int i;
+    int x = -1;
+
+    if (index < 1 || index > LengthLL(Head))
+    {
+        printf("Invalid index!\n");
+        return -1;
+    }
+
+    // Delete first node
+    if (index == 1) // delete from head node
+    {
+        while (p->next != Head)
+        {
+            p = p->next; // move to last node
+        }
+
+        x = Head->data;
+        if (Head == p) // Only one node last node
+        {
+            free(Head);
+            Head = NULL;
+        }
+        // More than one node
+        else
+        {
+            p->next = Head->next;
+            free(Head);
+            Head = p->next;
+        }
+        return x;
+    }
+    // Delete at middle or end this inde3x not 0 based
+    else
+    {
+        p = Head;
+        for (i = 0; i < index - 2; i++)
+        {
+            p = p->next;
+        }
+
+        q = p->next;
+        p->next = q->next;
+        x = q->data;
+        free(q);
+        return x;
+    }
+}
+
 int main()
 {
     int A[] = {10, 20, 30, 40, 50};
@@ -138,23 +193,28 @@ int main()
     printf("\n");
 
     InsertAtGivenPosition(Head, 2, 500);
-    DisplayCircularLinkedList(Head);
 
+    DisplayCircularLinkedList(Head);
+    int deletedValue1 = CircularDelete(Head, 4);
+    printf("\nDeleted value at index 4: %d\n", deletedValue1);
+    int deletedValue2 = CircularDelete(Head, 3);
+    printf("\nDeleted value at index 3: %d\n", deletedValue2);
+    printf("\n");
+
+    DisplayCircularLinkedList(Head);
     return 0;
 }
 
 /*
 benraiss@MacBookAir CircularLinkedList % clang -std=c17 -Wall -Wextra -o circular_ll CircularLL.c
-benraiss@MacBookAir CircularLinkedList % ./circular_ll
-10 -> 20 -> 30 -> 40 -> 50 ->
-500 -> 10 -> 20 -> 30 -> 40 -> 50 -> 500 -> (head: 500)
-benraiss@MacBookAir CircularLinkedList % clang -std=c17 -Wall -Wextra -o circular_ll CircularLL.c
-benraiss@MacBookAir CircularLinkedList % ./circular_ll
-10 -> 20 -> 30 -> 40 -> 50 ->
-10 -> 20 -> 30 -> 40 -> 50 -> 500 -> (head: 10)
-benraiss@MacBookAir CircularLinkedList % clang -std=c17 -Wall -Wextra -o circular_ll CircularLL.c
-benraiss@MacBookAir CircularLinkedList % ./circular_ll
-10 -> 20 -> 30 -> 40 -> 50 ->
+benraiss@MacBookAir CircularLinkedList % ./circular_ll                                           
+10 -> 20 -> 30 -> 40 -> 50 -> 
 10 -> 20 -> 500 -> 30 -> 40 -> 50 -> (head: 10)
-benraiss@MacBookAir CircularLinkedList %
+
+Deleted value at index 4: 30
+
+Deleted value at index 3: 500
+
+10 -> 20 -> 40 -> 50 -> (head: 10)
+benraiss@MacBookAir CircularLinkedList % 
 */
