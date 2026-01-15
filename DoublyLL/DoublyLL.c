@@ -10,6 +10,7 @@ struct Node
 
 // Function declarations
 void createDoublyLinkedList(int A[], int n);
+void insertNode(struct Node *p, int index, int x);
 void displayForward(struct Node *p);
 void displayBackward(struct Node *p);
 int length(struct Node *p);
@@ -50,6 +51,71 @@ void createDoublyLinkedList(int A[], int n)
           first                                                      last
 
         */
+    }
+}
+
+// ============================================================================
+// INSERTION NEW NODE AT GIVEN POSITION
+// ============================================================================
+/*
+ * Insert node at specific index (0-based)
+ *
+ * Example: Insert 25 at index 2 in [10, 20, 30]
+ * Before: NULL <-> 10 <-> 20 <-> 30 <-> NULL
+ * After:  NULL <-> 10 <-> 20 <-> 25 <-> 30 <-> NULL
+ *                               ↑ (index 2)
+ *
+ * Time: O(n), Space: O(1)
+ */
+void insertNode(struct Node *p, int index, int x)
+{
+    struct Node *t;
+    int i;
+
+    if (index < 0 || index > length(first))
+    {
+        printf("Invalid index!\n");
+        return;
+    }
+
+    // Case 1: Insert at beginning (index 0)
+    if (index == 0)
+    {
+        t = (struct Node *)malloc(sizeof(struct Node));
+        t->data = x;
+        t->prev = NULL;
+        t->next = first;
+
+        if (first != NULL) // Check if list is not empty
+        {
+            first->prev = t;
+        }
+        first = t;
+    }
+    // Case 2: Insert at middle or end
+    else
+    {
+        p = first; // Start from first, not using parameter p
+
+        // Move to node before insertion point
+        for (i = 0; i < index - 1; i++)
+        {
+            p = p->next;
+        }
+
+        t = (struct Node *)malloc(sizeof(struct Node));
+        t->data = x;
+
+        // Link new node
+        t->next = p->next; // t points forward to p's next
+        t->prev = p;       // t points back to p
+
+        if (p->next != NULL) // If not inserting at end
+        {
+            p->next->prev = t; // Update forward node's back pointer
+        }
+
+        p->next = t; // p now points forward to t
     }
 }
 
@@ -127,6 +193,11 @@ int main()
 
     createDoublyLinkedList(A, n);
 
+    printf("Inserting 25 at index 3 and 5:\n");
+    insertNode(first, 3, 25);
+    insertNode(first, 5, 25);
+    printf("\n");
+
     printf("\nLenght is : %d\n", length(first));
 
     printf("═══ DISPLAY FORWARD ═══\n");
@@ -152,30 +223,61 @@ int main()
 }
 
 /*
-    benraiss@MacBookAir DoublyLL % clang -std=c17 -Wall -Wextra -o doubly_ll DoublyLL.c
-    benraiss@MacBookAir DoublyLL % ./doubly_ll
-    ═══════════════════════════════════════════════════════
-    DOUBLY LINKED LIST - OPERATIONS DEMO
-    ═══════════════════════════════════════════════════════
+benraiss@MacBookAir DoublyLL % clang -std=c17 -Wall -Wextra -o doubly_ll DoublyLL.c
+benraiss@MacBookAir DoublyLL % ./doubly_ll
+═══════════════════════════════════════════════════════
+  DOUBLY LINKED LIST - OPERATIONS DEMO
+═══════════════════════════════════════════════════════
 
-    Creating doubly linked list from array: 10 20 30 40 50
+Creating doubly linked list from array: 10 20 30 40 50
+
+Inserting 25 at index 5:
 
 
-    Lenght is : 5
-    ═══ DISPLAY FORWARD ═══
-    Forward: NULL <-> 10 <-> 20 <-> 30 <-> 40 <-> 50 <-> NULL
+Lenght is : 6
+═══ DISPLAY FORWARD ═══
+Forward: NULL <-> 10 <-> 20 <-> 30 <-> 40 <-> 50 <-> 25 <-> NULL
 
-    ═══ DISPLAY BACKWARD ═══
-    Backward: NULL <-> 50 <-> 40 <-> 30 <-> 20 <-> 10 <-> NULL
+═══ DISPLAY BACKWARD ═══
+Backward: NULL <-> 25 <-> 50 <-> 40 <-> 30 <-> 20 <-> 10 <-> NULL
 
-    ═══ LIST LENGTH ═══
-    Length: 5
+═══ LIST LENGTH ═══
+Length: 6
 
-    ═══ MEMORY STRUCTURE (Conceptual) ═══
-    NULL <-> [10] <-> [20] <-> [30] <-> [40] <-> [50] <-> NULL
-        ↑                                          ↑
-        first                                      last
+═══ MEMORY STRUCTURE (Conceptual) ═══
+NULL <-> [10] <-> [20] <-> [30] <-> [40] <-> [50] <-> NULL
+       ↑                                          ↑
+     first                                      last
 
-    ═══════════════════════════════════════════════════════
-    Program completed successfully!
+═══════════════════════════════════════════════════════
+Program completed successfully!
+benraiss@MacBookAir DoublyLL % clang -std=c17 -Wall -Wextra -o doubly_ll DoublyLL.c
+benraiss@MacBookAir DoublyLL % ./doubly_ll
+═══════════════════════════════════════════════════════
+  DOUBLY LINKED LIST - OPERATIONS DEMO
+═══════════════════════════════════════════════════════
+
+Creating doubly linked list from array: 10 20 30 40 50
+
+Inserting 25 at index 3:
+
+
+Lenght is : 6
+═══ DISPLAY FORWARD ═══
+Forward: NULL <-> 10 <-> 20 <-> 30 <-> 25 <-> 40 <-> 50 <-> NULL
+
+═══ DISPLAY BACKWARD ═══
+Backward: NULL <-> 50 <-> 40 <-> 25 <-> 30 <-> 20 <-> 10 <-> NULL
+
+═══ LIST LENGTH ═══
+Length: 6
+
+═══ MEMORY STRUCTURE (Conceptual) ═══
+NULL <-> [10] <-> [20] <-> [30] <-> [40] <-> [50] <-> NULL
+       ↑                                          ↑
+     first                                      last
+
+═══════════════════════════════════════════════════════
+Program completed successfully!
+benraiss@MacBookAir DoublyLL %
 */
