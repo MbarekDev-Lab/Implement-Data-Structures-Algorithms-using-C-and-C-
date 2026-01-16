@@ -171,6 +171,53 @@ int deleteNode(struct Node *p, int index)
 }
 
 // ============================================================================
+// REVERSE DOUBLY LINKED LIST
+// ============================================================================
+
+void reverseDoublyLinkedList(struct Node *p)
+{
+    struct Node *temp = NULL;
+    // struct Node *current = p;
+
+    // Swap next and prev for all nodes
+    while (p != NULL)
+    {
+        // Swap prev and next
+        temp = p->next;
+        p->next = p->prev;
+        p->prev = temp;
+        p = p->prev;
+
+        if (p != NULL && p->next == NULL)
+        {
+            first = p;
+        }
+
+        /*temp = current->prev;
+        current->prev = current->next;
+        current->next = temp;
+
+        // Move to next node (which is previous before swap)
+        current = current->prev;*/
+    }
+
+    // Update first to new head
+    // if (temp != NULL)first = temp->prev;
+}
+
+// ============================================================================
+// DISPLAY REVERSED LL
+// ============================================================================
+void Display(struct Node *p)
+{
+    while (p != NULL)
+    {
+        printf("%d ", p->data);
+        p = p->next;
+    }
+}
+
+// ============================================================================
 // DISPLAY FORWARD
 // ============================================================================
 void displayForward(struct Node *p)
@@ -241,16 +288,21 @@ int main()
         printf("%d ", A[i]);
     }
     printf("\n\n");
-
     createDoublyLinkedList(A, n);
+
+    printf("═══ DISPLAY FORWARD ═══\n");
+    displayForward(first);
+    printf("\n");
 
     printf("Inserting 25 at index 3 and 5:\n");
     insertNode(first, 3, 25);
     insertNode(first, 5, 25);
+
+    printf("After inserting 25 at index 3 and 5:\n");
+    Display(first);
     printf("\n");
 
     printf("══ deleting node at a given position ══\n");
-
     printf("deleting nodes at index 2 and 4:\n");
     printf("\n");
 
@@ -258,9 +310,9 @@ int main()
     deleteNode(first, 4);
 
     printf("\nLenght is : %d\n", length(first));
-
-    printf("═══ DISPLAY FORWARD ═══\n");
-    displayForward(first);
+    printf("═══ reverse doubly linked list═══\n");
+    reverseDoublyLinkedList(first);
+    Display(first);
     printf("\n");
 
     printf("═══ DISPLAY BACKWARD ═══\n");
@@ -282,33 +334,38 @@ int main()
 }
 
 /*
-    ═══════════════════════════════════════════════════════
-    DOUBLY LINKED LIST - OPERATIONS DEMO
-    ═══════════════════════════════════════════════════════
+        Program completed successfully!
+        benraiss@MacBookAir DoublyLL % clang -std=c17 -Wall -Wextra -o doubly_ll DoublyLL.c
+        benraiss@MacBookAir DoublyLL % ./doubly_ll
+        ═══════════════════════════════════════════════════════
+        DOUBLY LINKED LIST - OPERATIONS DEMO
+        ═══════════════════════════════════════════════════════
 
-    Creating doubly linked list from array: 10 20 30 40 50
+        Creating doubly linked list from array: 10 20 30 40 50
 
-    Inserting 25 at index 3 and 5:
+        ═══ DISPLAY FORWARD ═══
+        Forward: NULL <-> 10 <-> 20 <-> 30 <-> 40 <-> 50 <-> NULL
 
-    ══ deleting node at a given position ══
-    deleting nodes at index 2 and 4:
+        Inserting 25 at index 3 and 5:
+        10 20 30 25 40 25 50
+        ══ deleting node at a given position ══
+        deleting nodes at index 2 and 4:
 
 
-    Lenght is : 5
-    ═══ DISPLAY FORWARD ═══
-    Forward: NULL <-> 10 <-> 30 <-> 25 <-> 25 <-> 50 <-> NULL
+        Lenght is : 5
+        ═══ reverse doubly linked list═══
+        50 25 25 30 10
+        ═══ DISPLAY BACKWARD ═══
+        Backward: NULL <-> 10 <-> 30 <-> 25 <-> 25 <-> 50 <-> NULL
 
-    ═══ DISPLAY BACKWARD ═══
-    Backward: NULL <-> 50 <-> 25 <-> 25 <-> 30 <-> 10 <-> NULL
+        ═══ LIST LENGTH ═══
+        Length: 5
 
-    ═══ LIST LENGTH ═══
-    Length: 5
+        ═══ MEMORY STRUCTURE (Conceptual) ═══
+        NULL <-> [10] <-> [20] <-> [30] <-> [40] <-> [50] <-> NULL
+            ↑                                          ↑
+            first                                      last
 
-    ═══ MEMORY STRUCTURE (Conceptual) ═══
-    NULL <-> [10] <-> [20] <-> [30] <-> [40] <-> [50] <-> NULL
-        ↑                                          ↑
-        first                                      last
-
-    ═══════════════════════════════════════════════════════
-    Program completed successfully!
+        ═══════════════════════════════════════════════════════
+        Program completed successfully!
 */
