@@ -23,7 +23,7 @@ public:
         top = NULL;
     }
 
-    ~StackLL()
+    ~StackLL() // Destructor to free memory
     {
         while (top != NULL)
         {
