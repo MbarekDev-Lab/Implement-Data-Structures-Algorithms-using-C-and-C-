@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // ============================================================================
 // STACK USING LINKED LIST
@@ -20,7 +21,6 @@ void push(char x)
     struct Node *t;
     t = (struct Node *)malloc(sizeof(struct Node));
 
-    // Stack grows only when memory exists
     if (t == NULL)
     {
         printf("Stack Overflow (Heap memory full)\n");
@@ -30,7 +30,6 @@ void push(char x)
         t->data = x;
         t->next = top;
         top = t;
-        printf("Pushed: %c\n", x);
     }
 }
 
@@ -40,12 +39,12 @@ void push(char x)
 char pop()
 {
     struct Node *t;
-    char x = -1; // default return value for empty stack
+    char x = '\0'; // default return value for empty stack
 
     if (top == NULL)
     {
         printf("Stack Underflow (empty)\n");
-        return -1;
+        return '\0';
     }
     else
     {
@@ -55,35 +54,6 @@ char pop()
         free(t);
         return x;
     }
-}
-
-// ============================================================================
-// PEEK OPERATION - Get element at position (1-based)
-// ============================================================================
-int peek(int pos)
-{
-    struct Node *p = top;
-    int i;
-
-    for (i = 0; p != NULL && i < pos - 1; i++)
-    {
-        p = p->next;
-    }
-
-    if (p != NULL)
-        return p->data;
-    else
-        return -1;
-}
-
-// ============================================================================
-// STACK TOP - Get top element without removing
-// ============================================================================
-int stackTop()
-{
-    if (top != NULL)
-        return top->data;
-    return -1;
 }
 
 // ============================================================================
@@ -110,37 +80,56 @@ void Display()
     printf("Stack (Top → Bottom): ");
     while (p != NULL)
     {
-        printf("%d ", p->data);
+        printf("%c ", p->data);
         p = p->next;
     }
     printf("\n");
 }
 
-int isBalanced(char *exp)
+// ============================================================================
+// CHECK IF PARENTHESES ARE BALANCED
+// ============================================================================
+int isBalanced(const char *exp)
 {
-
     int i;
 
     for (i = 0; exp[i] != '\0'; i++)
     {
-        if (exp[i] == '(')
+        if (exp[i] == '(' || exp[i] == '[' || exp[i] == '{')
+        {
             push(exp[i]);
-        else if (exp[i] == ')')
+        }
+        else if (exp[i] == ')' || exp[i] == ']' || exp[i] == '}')
         {
             if (top == NULL)
-                return 0;
-            pop();
+            {
+                return 0; // Unmatched closing bracket
+            }
+
+            char popped = pop();
+
+            // Check if brackets match
+            if ((exp[i] == ')' && popped != '(') ||
+                (exp[i] == ']' && popped != '[') ||
+                (exp[i] == '}' && popped != '{'))
+            {
+                return 0; // Mismatched brackets
+            }
         }
     }
 
-    if (top == NULL)
+    // Stack should be empty if balanced
+    return (top == NULL) ? 1 : 0;
+}
+
+// ============================================================================
+// FREE STACK MEMORY
+// ============================================================================
+void freeStack()
+{
+    while (top != NULL)
     {
-        /* code */
-        return 1;
-    }
-    else
-    {
-        return 0;
+        pop();
     }
 }
 
@@ -150,45 +139,77 @@ int isBalanced(char *exp)
 int main()
 {
     printf("═══════════════════════════════════════════════════════\n");
-    printf("       STACK IMPLEMENTATION USING LINKED LIST\n");
+    printf("       PARENTHESIS MATCHING USING STACK\n");
     printf("═══════════════════════════════════════════════════════\n\n");
 
-    char *exp = "{[(a+b)*(c+d)] - (e+f))}"; // Example expression
-    printf("Expression: %s\n", exp);
+    // Test cases
+    const char *test1 = "{[(a+b)*(c-d)]}";
+    const char *test2 = "{[(a+b)*(c-d)]";
+    const char *test3 = "{[(a+b)*(c-d)]}]";
+    const char *test4 = "((a+b))";
+    const char *test5 = "((a+b)";
+    const char *test6 = "{[()]}";
 
-    if (isBalanced(exp))
-        printf("Balanced\n");
-    else
-        printf("Not Balanced\n");
+    printf("═══ TEST CASES ═══\n");
 
-    printf("\n═══ FINAL STATUS ═══\n");
-    Display();
-    printf("Is Empty: %s\n", isEmpty() ? "Yes" : "No");
+    printf("1. Expression: %s\n", test1);
+    printf("   Result: %s\n\n", isBalanced(test1) ? " Balanced" : " Not Balanced");
+    freeStack();
 
-    printf("\n═══════════════════════════════════════════════════════\n");
+    printf("2. Expression: %s\n", test2);
+    printf("   Result: %s\n\n", isBalanced(test2) ? " Balanced" : " Not Balanced");
+    freeStack();
+
+    printf("3. Expression: %s\n", test3);
+    printf("   Result: %s\n\n", isBalanced(test3) ? " Balanced" : " Not Balanced");
+    freeStack();
+
+    printf("4. Expression: %s\n", test4);
+    printf("   Result: %s\n\n", isBalanced(test4) ? " Balanced" : " Not Balanced");
+    freeStack();
+
+    printf("5. Expression: %s\n", test5);
+    printf("   Result: %s\n\n", isBalanced(test5) ? " Balanced" : " Not Balanced");
+    freeStack();
+
+    printf("6. Expression: %s\n", test6);
+    printf("   Result: %s\n\n", isBalanced(test6) ? " Balanced" : " Not Balanced");
+    freeStack();
+
+    printf("═══════════════════════════════════════════════════════\n");
     printf("Program completed successfully!\n");
 
     return 0;
 }
 
 /*
-benraiss@Mbareks-MacBook-Air stack %  clang -std=c17 -Wall -Wextra -o _c PartenthesisMatching.c
-benraiss@Mbareks-MacBook-Air stack % ./_c
-═══════════════════════════════════════════════════════
-       STACK IMPLEMENTATION USING LINKED LIST
-═══════════════════════════════════════════════════════
+    benraiss@Mbareks-MacBook-Air stack %  clang -std=c17 -Wall -Wextra -o _c PartenthesisMatching.c
+    benraiss@Mbareks-MacBook-Air stack % ./_c
+    ═══════════════════════════════════════════════════════
+        PARENTHESIS MATCHING USING STACK
+    ═══════════════════════════════════════════════════════
 
-Expression: {[(a+b)*(c+d)] - (e+f))}
-Pushed: (
-Pushed: (
-Pushed: (
-Not Balanced
+    ═══ TEST CASES ═══
+    1. Expression: {[(a+b)*(c-d)]}
+    Result:  Balanced
 
-═══ FINAL STATUS ═══
-Stack is empty
-Is Empty: Yes
+    2. Expression: {[(a+b)*(c-d)]
+    Result:  Not Balanced
 
-═══════════════════════════════════════════════════════
-Program completed successfully!
-benraiss@Mbareks-MacBook-Air stack %
+    3. Expression: {[(a+b)*(c-d)]}]
+    Result:  Not Balanced
+
+    4. Expression: ((a+b))
+    Result:  Balanced
+
+    5. Expression: ((a+b)
+    Result:  Not Balanced
+
+    6. Expression: {[()]}
+    Result:  Balanced
+
+    ═══════════════════════════════════════════════════════
+    Program completed successfully!
+    benraiss@Mbareks-MacBook-Air stack %
+
 */
