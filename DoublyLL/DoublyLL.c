@@ -11,6 +11,9 @@ struct Node
 // Function declarations
 void createDoublyLinkedList(int A[], int n);
 void insertNode(struct Node *p, int index, int x);
+int deleteNode(struct Node *p, int index);
+void reverseDoublyLinkedList(struct Node *p);
+void Display(struct Node *p);
 void displayForward(struct Node *p);
 void displayBackward(struct Node *p);
 int length(struct Node *p);
@@ -215,7 +218,7 @@ void Display(struct Node *p)
         printf("%d ", p->data);
         p = p->next;
     }
-}
+} 
 
 // ============================================================================
 // DISPLAY FORWARD
