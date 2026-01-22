@@ -215,3 +215,77 @@ int main()
 
     return 0;
 }
+/*
+
+    benraiss@MacBookAir queue %  clang -std=c17 -Wall -Wextra -o _c Queue.c
+    benraiss@MacBookAir queue % ./_c
+    ═══════════════════════════════════════════════════════════
+        QUEUE COMPARISON: LINEAR vs CIRCULAR
+    ═══════════════════════════════════════════════════════════
+
+    ╔═══════════════════════════════════════╗
+    ║  PART 1: LINEAR QUEUE (Problem)      ║
+    ╚═══════════════════════════════════════╝
+
+    Step 1: Enqueue 5 elements (10, 20, 30, 40, 50)
+    Queue: 10 20 30 40 50
+
+    Step 2: Dequeue 3 elements
+    Dequeued: 10
+    Dequeued: 20
+    Dequeued: 30
+    Queue: 40 50
+
+    Step 3: Try to enqueue new element (60)
+    Result: Queue is Full
+    PROBLEM: Indices 0, 1, 2 are FREE but we can't use them!
+    This is SPACE WASTAGE in linear queue.
+
+
+    ╔═══════════════════════════════════════╗
+    ║  PART 2: CIRCULAR QUEUE (Solution)   ║
+    ╚═══════════════════════════════════════╝
+
+    Step 1: Enqueue 5 elements (10, 20, 30, 40, 50)
+    Queue: 10 20 30 40 50
+    State: front=-1, rear=4
+
+    Step 2: Dequeue 3 elements
+    Dequeued: 10
+    Dequeued: 20
+    Dequeued: 30
+    Queue: 40 50
+    State: front=2, rear=4
+
+    Step 3: Enqueue new elements (60, 70, 80)
+    After enqueue(60) - Queue: 40 50 60
+    State: front=2, rear=0 (rear wrapped to 0!)
+    After enqueue(70) - Queue: 40 50 60 70
+    State: front=2, rear=1
+    Queue is Full
+    After enqueue(80) - Queue: 40 50 60 70
+    State: front=2, rear=1
+
+    SUCCESS: Circular queue REUSED the freed space!
+    Elements at indices: 3, 4, 0, 1, 2 (wrapped around)
+
+    Step 4: Try to add one more (should be full now)
+    Result: Queue is Full
+    This is correct - we can store max 4 elements in size-5 array
+    (1 slot sacrificed to distinguish empty from full)
+
+    Step 5: Dequeue all remaining elements
+    Dequeued: 40 - Remaining: 50 60 70
+    Dequeued: 50 - Remaining: 0 70
+    Dequeued: 60 - Remaining: 70
+    Dequeued: 70 - Remaining: Queue is Empty
+
+    ═══════════════════════════════════════════════════════════
+    KEY INSIGHT:
+    Linear Queue:   Space wastage - can't reuse freed slots
+    Circular Queue: Efficient - reuses freed slots via modulo!
+    ═══════════════════════════════════════════════════════════
+    benraiss@MacBookAir queue %
+
+
+*/
