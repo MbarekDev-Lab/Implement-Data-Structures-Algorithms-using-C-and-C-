@@ -62,7 +62,7 @@ void Display()
 }
 
 int main()
-{
+{fffrt
     enqueue(10);
     enqueue(20);
     enqueue(30);
