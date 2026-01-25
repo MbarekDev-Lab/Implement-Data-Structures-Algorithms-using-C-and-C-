@@ -4,17 +4,44 @@ using namespace std;
 
 class Tree
 {
-
-public:
+    // automatically private in C++ private by default
     Node *root;
 
+public:
     Tree() { root = nullptr; }
     void Treecreate();
-    void Preorder(Node *p);
+
+    void Preorder()
+    {
+        Preorder(root); // start from root calls private function
+    };
+    void Preorder(Node *p); // Declaration (only) of private function implemented later
+
+    void Inorder()
+    {
+        Inorder(root);
+    };
     void Inorder(Node *p);
+
+    void Postorder()
+    {
+        Postorder(root);
+    };
     void Postorder(Node *p);
-    void Levelorder();
+
+    void Levelorder()
+    {
+        Levelorder(root);
+        cout << endl;
+    };
+    void Levelorder(Node *p);
+
+    int Height()
+    {
+        return Height(root);
+    };
     int Height(Node *p);
+
     ~Tree();
 };
 
@@ -58,12 +85,12 @@ void Tree::Treecreate()
     }
 }
 
-void Tree::Preorder(Node *p)
+void Tree::Preorder(Node *p) // private function implementation
 {
     if (p)
     {
         cout << p->data << " ";
-        Preorder(p->lChird);
+        Preorder(p->lChird); // recursivly traverse left child
         Preorder(p->rChird);
     }
 }
@@ -85,10 +112,9 @@ void Tree::Postorder(Node *p)
         cout << p->data << " ";
     }
 }
-void Tree::Levelorder()
+void Tree::Levelorder(Node *p)
 {
     Queue q;
-    Node *p = root;
     cout << p->data << " ";
     enqueue(&q, p);
 
@@ -130,32 +156,40 @@ int main()
     t.Treecreate();
 
     cout << "\nPreorder traversal: ";
-    t.Preorder(t.root);
+    t.Preorder();
 
     cout << "\nInorder traversal: ";
-    t.Inorder(t.root);
+    t.Inorder();
 
     cout << "\nPostorder traversal: ";
-    t.Postorder(t.root);
+    t.Postorder();
 
     cout << "\nLevel-order traversal: ";
     t.Levelorder();
 
-    cout << "\nHeight of tree: " << t.Height(t.root) << endl;
+    cout << "\nHeight of tree: " << t.Height() << endl;
 
     return 0;
 }
+
 /*
 
-    benraiss@MacBookAir trees %  clang -std=c17 -Wall -Wextra -o _tree Tree.c
-    benraiss@MacBookAir trees % ./_tree
-    Enter root value 10
-    Enter left child of 10 20
-    Enter right child of 10 30
-    Enter left child of 20 -1
-    Enter right child of 20 -1
-    Enter left child of 30 -1
-    Enter right child of 30 -1
-    Preorder traversal: 10 20 30
-    Inorder traversal: 20 10 30
+    benraiss@MacBookAir trees % clang++ -std=c++17 -Wall -Wextra -o _treecpp TreeCpp.cpp
+    benraiss@MacBookAir trees % ./_treecpp                                              
+    Enter root value: 10
+    Enter left child of 10: 20
+    Enter right child of 10: 30
+    Enter left child of 20: -1
+    Enter right child of 20: -1
+    Enter left child of 30: -1
+    Enter right child of 30: -1
+
+    Preorder traversal: 10 30 30 
+    Inorder traversal: 30 10 30 
+    Postorder traversal: 30 30 10 
+    Level-order traversal: 10 30 30 
+
+    Height of tree: 2
+    benraiss@MacBookAir trees % 
+
 */

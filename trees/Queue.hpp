@@ -37,8 +37,7 @@ public:
     {
         size = s;
         front = rear = -1;
-        this->size = size;
-        Q = new Node *[this->size];
+        Q = new Node *[size];
     };
 
     friend void create(Queue *q, int size);
@@ -66,9 +65,9 @@ void enqueue(Queue *q, Node *x)
     // struct Node *next;
 };
 
-Node *dequeue(struct Queue *q)
+Node *dequeue(Queue *q)
 {
-    struct Node *x = NULL;
+    Node *x = nullptr;
 
     if (q->front == q->rear)
         printf("Queue is Empty\n");
@@ -89,7 +88,7 @@ void Display(Queue q)
     printf("\n");
 }
 
-int isEmpty(struct Queue q)
+int isEmpty(Queue q)
 {
     return q.front == q.rear; // true if empty
 }
