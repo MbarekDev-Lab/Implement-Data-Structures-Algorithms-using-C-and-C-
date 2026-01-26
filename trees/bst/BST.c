@@ -43,6 +43,29 @@ void Insert(int key) // insert key in BST
         r->rchild = p;
 }
 
+struct Node *RInsert(struct Node *p, int key)
+{
+    struct Node *t = NULL;
+
+    if (p == NULL)
+    {
+        t = (struct Node *)malloc(sizeof(struct Node));
+        t->data = key;
+        t->lchild = t->rchild = NULL;
+        return t;
+    }
+
+    if (key < p->data)
+    {
+        p->lchild = RInsert(p->lchild, key);
+    }
+    else if (key > p->data)
+    {
+        p->rchild = RInsert(p->rchild, key);
+    }
+    return p;
+}
+
 void Inorder(struct Node *p)
 {
     if (p)
@@ -75,6 +98,7 @@ struct Node *Search(int key)
     return NULL;
 }
 
+// Helper function to find height of tree recursively
 int Height(struct Node *p)
 {
     int x, y;
@@ -120,13 +144,14 @@ struct Node *Delete(struct Node *p, int key)
         p->rchild = Delete(p->rchild, key);
     else
     {
-        if (Height(p->lchild) > Height(p->rchild))
+        // key found
+        if (Height(p->lchild) > Height(p->rchild)) // left subtree is taller
         {
             q = InorderPredecessor(p->lchild);
             p->data = q->data;
             p->lchild = Delete(p->lchild, q->data);
         }
-        else
+        else // right subtree is taller
         {
             q = InorderSuccessor(p->rchild);
             p->data = q->data;
@@ -140,14 +165,17 @@ int main()
 {
     struct Node *temp;
 
-    // Insert nodes
-    Insert(50);
-    Insert(30);
-    Insert(70);
-    Insert(20);
-    Insert(40);
-    Insert(60);
-    Insert(80);
+    // recursive  Insert nodes
+    root = RInsert(root, 10);
+    RInsert(root, 5);
+    RInsert(root, 20);
+    RInsert(root, 20);
+    RInsert(root, 8);
+    RInsert(root, 30);
+
+    // Delete nodes
+    printf("Deleting root 10...\n");
+    Delete(root, 10); // delete root
 
     printf("Binary Search Tree Operations\n");
     printf("==============================\n\n");
@@ -201,37 +229,38 @@ int main()
 
 /*
 
-benraiss@MacBookAir bst % clang++ -std=c++17 -Wall -Wextra -o _treenbst BST.c
+benraiss@Mbareks-MacBook-Air bst % clang++ -std=c++17 -Wall -Wextra -o _treenbst BST.c
 clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
-benraiss@MacBookAir bst % ./_treenbst
+benraiss@Mbareks-MacBook-Air bst % ./_treenbst
+Deleting root 10...
 Binary Search Tree Operations
 ==============================
 
-Initial BST (Inorder): 20 30 40 50 60 70 80
+Initial BST (Inorder): 5 8 20 30
 
 Height of BST: 3
 
 Search Results:
-  Key 40 found!
+  Key 40 not found.
   Key 100 not found.
 
 Deleting 20...
-After deletion (Inorder): 30 40 50 60 70 80
+After deletion (Inorder): 5 8 30
 
 Deleting 30...
-After deletion (Inorder): 40 50 60 70 80
+After deletion (Inorder): 5 8
 
 Deleting 50 (root)...
-After deletion (Inorder): 40 60 70 80
+After deletion (Inorder): 5 8
 
-Height after deletions: 3
+Height after deletions: 2
 
 BST operations completed successfully.
-benraiss@MacBookAir bst %
+benraiss@Mbareks-MacBook-Air bst %
 
-                50
-            /    \
-            30      70
-            /  \    /  \
-        20   40  60   80
+                10
+                /  \
+            5     20
+            \      \
+                8     30
 */
