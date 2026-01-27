@@ -12,55 +12,55 @@ struct Node
 int NodeHeight(struct Node *p)
 {
     int hl, hr;
-    hl = p && p->lchild ? p->lchild->height : 0;
-    hr = p && p->rchild ? p->rchild->height : 0;
-    return hl > hr ? hl + 1 : hr + 1;
+    hl = p && p->lchild ? p->lchild->height : 0; // if p exists and p has left child get its height else 0
+    hr = p && p->rchild ? p->rchild->height : 0; // if p exists and p has right child get its height else 0
+    return hl > hr ? hl + 1 : hr + 1;            // return max of left height and right height plus 1 for current node
 }
 
 int BalanceFactor(struct Node *p)
 {
-    int hl, hr;
-    hl = p && p->lchild ? p->lchild->height : 0;
-    hr = p && p->rchild ? p->rchild->height : 0;
-    return hl - hr;
+    int hl, hr;                                  // hl height left child hr height right child
+    hl = p && p->lchild ? p->lchild->height : 0; // if p exists and p has left child get its height else 0
+    hr = p && p->rchild ? p->rchild->height : 0; // if p exists and p has right child get its height else 0
+    return hl - hr;                              // balance factor is left height - right height
 }
 
 struct Node *LLRotation(struct Node *p)
 {
-    struct Node *pl = p->lchild;
-    struct Node *plr = pl->rchild;
+    struct Node *pl = p->lchild;   // pl means p left child
+    struct Node *plr = pl->rchild; // plr means p left right child
 
-    pl->rchild = p;
-    p->lchild = plr;
+    pl->rchild = p;  // rotate
+    p->lchild = plr; // rotate
 
-    p->height = NodeHeight(p);
-    pl->height = NodeHeight(pl);
+    p->height = NodeHeight(p);   // update heights
+    pl->height = NodeHeight(pl); // update heights
 
-    if (root == p)
-        root = pl;
-    return pl;
+    if (root == p) // update root if necessary
+        root = pl; // if p was root now pl is root
+    return pl;     // new root after rotation
 }
 
 struct Node *RRRotation(struct Node *p)
 {
-    struct Node *pr = p->rchild;
-    struct Node *prl = pr->lchild;
+    struct Node *pr = p->rchild;   // pr means p right child
+    struct Node *prl = pr->lchild; // prl means p right left child
 
-    pr->lchild = p;
-    p->rchild = prl;
+    pr->lchild = p;  // rotate
+    p->rchild = prl; // rotate
 
-    p->height = NodeHeight(p);
-    pr->height = NodeHeight(pr);
+    p->height = NodeHeight(p);   // update heights
+    pr->height = NodeHeight(pr); // update heights
 
-    if (root == p)
-        root = pr;
+    if (root == p) // update root if necessary
+        root = pr; // if p was root now pr is root
     return pr;
 }
 
 struct Node *RLRotation(struct Node *p)
 {
-    struct Node *pr = p->rchild;
-    struct Node *prl = pr->lchild;
+    struct Node *pr = p->rchild;   // pr means p right child
+    struct Node *prl = pr->lchild; // prl means p right left child
 
     pr->lchild = prl->rchild;
     p->rchild = prl->lchild;
