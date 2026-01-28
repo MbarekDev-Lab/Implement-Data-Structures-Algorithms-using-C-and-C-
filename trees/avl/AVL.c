@@ -115,16 +115,16 @@ struct Node *RInsert(struct Node *p, int key)
     }
     else if (key > p->data) // insert in right subtree
     {
-        p->rchild = RInsert(p->rchild, key); // recursive call
+        p->rchild = RInsert(p->rchild, key); // recursive call 
     }
 
     p->height = NodeHeight(p); // update height of current node
 
     if (BalanceFactor(p) == 2 && BalanceFactor(p->lchild) == 1) // LL Rotation
         return LLRotation(p);
-    else if (BalanceFactor(p) == 2 && BalanceFactor(p->lchild) == -1) // LR Rotation
+    else if (BalanceFactor(p) == 2 && BalanceFactor(p->lchild) == -1) // LR Rotation 
         return LRRotation(p);
-    else if (BalanceFactor(p) == -2 && BalanceFactor(p->rchild) == -1) // RR Rotation
+    else if (BalanceFactor(p) == -2 && BalanceFactor(p->rchild) == -1) // RR Rotation 
         return RRRotation(p);
     else if (BalanceFactor(p) == -2 && BalanceFactor(p->rchild) == 1) // RL Rotation
         return RLRotation(p);
