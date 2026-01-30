@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <stdio.h>
 
 using namespace std;
 
@@ -240,6 +241,45 @@ void heapSort(vector<int> &arr)
     }
 }
 
+void Insert(int A[], int n)
+{
+    int i = n, temp;
+    temp = A[i];
+    while (i > 1 && temp > A[i / 2])
+    {
+        A[i] = A[i / 2];
+        i = i / 2;
+    }
+    A[i] = temp;
+}
+
+int Delete(int A[], int n)
+{
+    int i, j, x, temp, val;
+    val = A[1];
+    x = A[n];
+    A[1] = A[n];
+    A[n] = val;
+    i = 1;
+    j = i * 2;
+    while (j <= n - 1)
+    {
+        if (j < n - 1 && A[j + 1] > A[j])
+            j = j + 1;
+        if (A[i] < A[j])
+        {
+            temp = A[i];
+            A[i] = A[j];
+            A[j] = temp;
+            i = j;
+            j = 2 * j;
+        }
+        else
+            break;
+    }
+    return val;
+}
+
 // ==================== DEMONSTRATION ====================
 
 int main()
@@ -347,6 +387,19 @@ int main()
         cout << "  Processing task with priority: " << pq.extractMax() << endl;
     }
 
+    int H[] = {0, 14, 15, 5, 20, 30, 8, 40};
+    int i;
+    for (i = 2; i <= 7; i++)
+        Insert(H, i);
+
+    for (i = 7; i > 1; i--)
+    {
+        Delete(H, i);
+    }
+    for (i = 1; i <= 7; i++)
+        printf("%d ", H[i]);
+    printf("\n");
+
     cout << "\n===========================================" << endl;
     cout << "   DEMO COMPLETED SUCCESSFULLY!" << endl;
     cout << "===========================================" << endl;
@@ -409,5 +462,79 @@ int main()
     DEMO COMPLETED SUCCESSFULLY!
     ===========================================
     benraiss@Mbareks-MacBook-Air heap %
+
+*/
+
+/*
+Insert 10:
+Array: [10]
+Parent: none
+Heap: 10
+
+Insert 20:
+Array: [10, 20]
+20 > 10 → shift 10 down
+Array: [20, 10]
+Heap:   20
+       /
+      10
+
+Insert 30:
+Array: [20, 10, 30]
+30 > 10 → shift 10 (no)
+30 > 20 → shift 20 down
+Array: [30, 10, 20]
+Heap:     30
+         /  \
+        10   20
+
+Insert 25:
+Array: [30, 10, 20, 25]
+25 > 10 → shift 10 down
+25 < 30 → stop
+Array: [30, 25, 20, 10]
+Heap:     30
+         /  \
+        25   20
+       /
+      10
+
+Insert 5:
+Array: [30, 25, 20, 10, 5]
+5 < 25 → stop immediately
+Heap:     30
+         /  \
+        25   20
+       / \
+      10  5
+
+Insert 40:
+Array: [30, 25, 20, 10, 5, 40]
+40 > 20 → shift 20 down
+40 > 30 → shift 30 down
+Array: [40, 25, 30, 10, 5, 20]
+Heap:     40
+         /  \
+        25   30
+       / \   /
+      10  5 20
+
+Insert 35:
+Array: [40, 25, 30, 10, 5, 20, 35]
+35 > 30 → shift 30 down
+35 < 40 → stop
+Array: [40, 25, 35, 10, 5, 20, 30]
+
+
+Final Heap :     
+
+        40
+       /  \
+     25    35
+    / \    / \
+   10  5  20  30
+
+   Array: [40, 25, 35, 10, 5, 20, 30]
+
 
 */
