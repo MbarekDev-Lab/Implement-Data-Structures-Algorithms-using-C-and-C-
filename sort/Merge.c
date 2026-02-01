@@ -1,23 +1,38 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void swap(int *x, int *y)
+// Print array helper function
+void printArray(int A[], int n, const char *msg)
 {
-    int temp = *x;
-    *x = *y;
-    *y = temp;
+    printf("%s: ", msg);
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d ", A[i]);
+    }
+    printf("\n");
 }
+
+// Copy array helper function
+void copyArray(int src[], int dest[], int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        dest[i] = src[i];
+    }
+}
+
 // Merge two sorted subarrays A[l..mid] and A[mid+1..h]
 void Merge(int A[], int l, int mid, int h)
 {
     int i = l;       // starting index for left subarray
     int j = mid + 1; // starting index for right subarray
-    int k = l;       // starting index to be sorted
+    int k = l;       // starting index in temp array
     int B[100];      // temporary array to hold merged result
 
+    // Merge while both subarrays have elements
     while (i <= mid && j <= h)
     {
-        if (A[i] < A[j])
+        if (A[i] <= A[j])  // Use <= for stable sort
         {
             B[k++] = A[i++];
         }
@@ -26,14 +41,17 @@ void Merge(int A[], int l, int mid, int h)
             B[k++] = A[j++];
         }
     }
-    for (; i <= mid; i++)
+    
+    // Copy remaining elements from left subarray (if any)
+    while (i <= mid)
     {
-        B[k++] = A[i];
+        B[k++] = A[i++];
     }
 
-    for (; j <= h; j++)
+    // Copy remaining elements from right subarray (if any)
+    while (j <= h)
     {
-        B[k++] = A[j];
+        B[k++] = A[j++];
     }
 
     // Copy merged result back to original array
@@ -43,13 +61,15 @@ void Merge(int A[], int l, int mid, int h)
     }
 }
 
-// Iterative Merge Sort
+// Iterative Merge Sort (Bottom-Up approach)
 void IMergeSort(int A[], int n)
 {
     int p, l, h, mid, i;
 
+    // Start with pairs (p=2), then groups of 4, 8, 16, etc.
     for (p = 2; p <= n; p = p * 2)
     {
+        // Merge adjacent groups of size p/2
         for (i = 0; i + p - 1 < n; i += p)
         {
             l = i;
@@ -58,21 +78,47 @@ void IMergeSort(int A[], int n)
             Merge(A, l, mid, h);
         }
     }
+    
+    // Merge any remaining elements (handles non-power-of-2 array sizes)
     if (p / 2 < n)
     {
         Merge(A, 0, (p / 2) - 1, n - 1);
     }
 }
 
+// Recursive Merge Sort (Top-Down approach)
+void RMergeSort(int A[], int l, int h)
+{
+    if (l < h)
+    {
+        int mid = (l + h) / 2;        // Find middle point
+        RMergeSort(A, l, mid);        // Sort left half
+        RMergeSort(A, mid + 1, h);    // Sort right half
+        Merge(A, l, mid, h);          // Merge sorted halves
+    }
+}
+
 int main()
 {
-    int A[] = {11, 13, 7, 12, 16, 9, 24, 5, 10, 3}, n = 10, i;
+    int original[] = {11, 13, 7, 12, 16, 9, 24, 5, 10, 3};
+    int n = sizeof(original) / sizeof(original[0]);
+    int A[n];
+    
+    printArray(original, n, "Original array");
+    printf("\n");
 
+    // Test 1: Iterative Merge Sort (Bottom-Up)
+    printf("=== ITERATIVE MERGE SORT (Bottom-Up) ===\n");
+    copyArray(original, A, n);
     IMergeSort(A, n);
+    printArray(A, n, "Sorted (Iterative)");
+    printf("\n");
 
-    for (i = 0; i < 10; i++)
-        printf("%d ", A[i]);
-
+    // Test 2: Recursive Merge Sort (Top-Down)
+    printf("=== RECURSIVE MERGE SORT (Top-Down) ===\n");
+    copyArray(original, A, n);
+    RMergeSort(A, 0, n - 1);
+    printArray(A, n, "Sorted (Recursive)");
     printf("\n");
 
     return 0;
