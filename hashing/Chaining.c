@@ -56,7 +56,7 @@ struct Node *Search(struct Node *p, int key)
 // Hash function: key % 10
 int hash(int key)
 {
-    return key % 10; // simple modulo hash function (map key to index 0-9)
+    return key % 10; // return size of hash table (map key to index 0-9)
 }
 
 // Insert key into hash table
@@ -122,22 +122,23 @@ int main()
 
 /*
 
-benraiss@Mbareks-MacBook-Air hashing %  clang -std=c17 -Wall -Wextra -o _chaining Chaining.c && ./_chaining
-Inserting: 12, 22, 42
+    benraiss@Mbareks-MacBook-Air hashing %  clang -std=c17 -Wall -Wextra -o _chaining Chaining.c && ./_chaining
+    Inserting: 12, 22, 42
 
-Hash Table:
-HT[0]: NULL
-HT[1]: NULL
-HT[2]: 12 -> 22 -> 42 -> NULL
-HT[3]: NULL
-HT[4]: NULL
-HT[5]: NULL
-HT[6]: NULL
-HT[7]: NULL
-HT[8]: NULL
-HT[9]: NULL
+    Hash Table:
+    HT[0]: NULL
+    HT[1]: NULL
+    HT[2]: 12 -> 22 -> 42 -> NULL
+    HT[3]: NULL
+    HT[4]: NULL
+    HT[5]: NULL
+    HT[6]: NULL
+    HT[7]: NULL
+    HT[8]: NULL
+    HT[9]: NULL
 
-Searching for 22: Found: 22
-Searching for 21: Not found
-benraiss@Mbareks-MacBook-Air hashing %
+    Searching for 22: Found: 22
+    Searching for 21: Not found
+    benraiss@Mbareks-MacBook-Air hashing %
+    
 */
