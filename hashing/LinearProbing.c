@@ -12,6 +12,7 @@ int hash(int key)
 
 // Generic probe function , finds empty slot or key location
 // Returns: index if found/empty slot available, -1 if table full
+// Abdul Bari’s words Never allow hash table to become full rehash before that.
 int probe(int HT[], int key, int *probes)
 {
     int index = hash(key);
@@ -80,6 +81,17 @@ int Search(int HT[], int key)
         return -1;
 
     return index;
+}
+
+int Search2(int H[], int key)
+{
+    int inedx = hash(key);
+    int i = 0;
+    while (H[(inedx + i) % SIZE] != EMPTY)
+    {
+        i++;
+        return (inedx + i) % SIZE;
+    }
 }
 
 // Display hash table
@@ -186,7 +198,7 @@ int main()
   Try index 6: occupied (35) → probe 2
   Try index 7: occupied (26) → probe 3
   Try index 8: EMPTY!        → probe 4
-  
+
 Total: 4 probes!
 
 */
