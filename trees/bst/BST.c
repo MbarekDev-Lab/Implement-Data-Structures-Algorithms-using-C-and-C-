@@ -21,7 +21,7 @@ void Insert(int key) // insert key in BST
         root = p;
         return;
     }
-
+ 
     while (t != NULL) // search for the key
     {
         r = t;
@@ -33,7 +33,7 @@ void Insert(int key) // insert key in BST
             return; // key already exists
     }
 
-    p = (struct Node *)malloc(sizeof(struct Node));
+    p = (struct Node *) (sizeof(struct Node));
     p->data = key;
     p->lchild = p->rchild = NULL;
 

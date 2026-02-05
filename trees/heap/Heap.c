@@ -60,7 +60,7 @@ int Delete(int H[], int n)
             j = j + 1; // Right child is larger
         }
 
-        // If parent is smaller than larger child, swap
+        // If parent is smaller than larger child, swap 
         if (lastElement < H[j])
         {
             H[i] = H[j]; // Move child up
