@@ -857,6 +857,249 @@ For recurrence $T(n) = aT(n/b) + f(n)$, calculate $\log_b a$ and compare with $f
 
 ---
 
+## Lecture 394: Master Theorem for Root Functions
+
+Perfect — this is the **last "hard" RR lecture**, and honestly it's the one that makes everything else finally click.
+
+### Big Picture First (VERY IMPORTANT)
+
+Up to now, Abdul Bari taught you **3 families of recurrences**:
+
+1. **Decreasing functions**
+   $$T(n) = T(n-1) + f(n)$$
+
+2. **Dividing functions**
+   $$T(n) = aT(n/b) + f(n)$$
+
+3. **Root functions** ← **This lecture**
+
+**This lecture exists because Master Theorem does NOT handle root terms like $\sqrt{n}$.**
+
+Abdul Bari's goal:
+> "You must know what to do when the problem size reduces by $\sqrt{n}$ or similar."
+
+---
+
+### What is a "Root Function" Recurrence?
+
+**Typical form:**
+$$T(n) = T(\sqrt{n}) + f(n)$$
+
+or sometimes:
+$$T(n) = T(n^{1/2}) + n$$
+
+**This is NOT divide-by-2.**  
+**This is take the square root.**
+
+That's a **completely different growth pattern**.
+
+---
+
+### Why This is Special (Intuition)
+
+Let's compare:
+
+**Dividing function:**
+$$n \to n/2 \to n/4 \to n/8 \to \dots$$
+Depth = $\log n$
+
+**Root function:**
+$$n \to \sqrt{n} \to \sqrt{\sqrt{n}} \to \sqrt{\sqrt{\sqrt{n}}} \to \dots$$
+
+This collapses **MUCH faster**.
+
+**Example with n = 65536:**
+```
+65536
+  256
+   16
+    4
+    2
+```
+**Only 5 levels** 😮
+
+That's why Abdul Bari treats this separately.
+
+---
+
+### What Abdul Bari REALLY Wants You to Learn
+
+🔴 **Key idea:**
+
+To solve root recurrences, **convert them into logarithmic levels using math**.
+
+He wants you to understand this transformation:
+
+**Step 1: Let $n = 2^k$**
+
+Then:
+$$\sqrt{n} = 2^{k/2}$$
+
+So the recurrence becomes:
+$$T(2^k) = T(2^{k/2}) + f(2^k)$$
+
+**Step 2: Define $S(k) = T(2^k)$**
+
+Then:
+$$S(k) = S(k/2) + f(2^k)$$
+
+💡 **BOOM — now it looks like a dividing recurrence again.**
+
+**That's the core trick of this lecture.**
+
+---
+
+### Example Abdul Bari Explains
+
+#### Example 1: T(n) = T(√n) + 1
+
+**Convert:**
+$$S(k) = S(k/2) + 1$$
+
+This is like:
+$$T(n) = T(n/2) + 1$$
+
+We know:
+$$T(n) = O(\log n)$$
+
+**But remember:** $k = \log n$
+
+So **final answer:**
+$$T(n) = O(\log \log n)$$
+
+🔥 **This result is VERY important.**
+
+---
+
+#### Example 2: T(n) = T(√n) + n
+
+- Levels = $\log \log n$
+- Work per level ≈ $n$
+
+**Total:**
+$$T(n) = n \log \log n$$
+
+---
+
+#### Example 3: T(n) = T(√n) + √n
+
+Work decreases each level:
+$$n + \sqrt{n} + \sqrt[4]{n} + \dots$$
+
+This series converges to:
+$$O(n)$$
+
+---
+
+### The Core Transformation
+
+**General process:**
+
+| Step | Action | Result |
+|------|--------|--------|
+| 1 | **Substitute** $n = 2^k$ | Express in terms of k |
+| 2 | **Define** $S(k) = T(2^k)$ | Convert to S(k) recurrence |
+| 3 | **Solve for S(k)** | Use standard methods |
+| 4 | **Substitute back** $k = \log n$ | Get T(n) complexity |
+
+**Key insight:** The height of the recursion tree becomes $\log \log n$ instead of $\log n$.
+
+---
+
+### How Deep is the Tree?
+
+For $T(n) = T(\sqrt{n}) + f(n)$:
+
+At level $i$, size is $n^{1/2^i}$
+
+When does it reach 2?
+$$n^{1/2^i} = 2$$
+$$\frac{1}{2^i} \log n = 1$$
+$$2^i = \log n$$
+$$i = \log \log n$$
+
+**Tree depth = $\log \log n$**
+
+This is **extremely shallow** compared to $\log n$!
+
+**Example:**
+- For $n = 2^{20}$ (about 1 million):
+  - Dividing by 2: depth = 20
+  - Taking square root: depth = $\log 20 \approx 4.3$
+
+---
+
+### Why This Lecture is IMPORTANT for Exams & Interviews
+
+Abdul Bari wants you to:
+
+✅ Recognize root recurrences instantly  
+✅ Know that normal Master Theorem does NOT apply  
+✅ Use $\log \log n$ depth intuition  
+✅ Convert using $n = 2^k$ trick
+
+**This is a favorite exam trap.**
+
+---
+
+### One-Line Memory Rule (Write This in Your Notes)
+
+> **If the recurrence has $\sqrt{n}$, the height is $\log \log n$.**
+
+---
+
+### Comparison Table: All Three Families
+
+| Family | Form | Depth | Example | Complexity |
+|--------|------|-------|---------|------------|
+| **Decreasing** | $T(n-1)$ | $n$ | Linear scan | $\Theta(n)$ |
+| **Dividing** | $T(n/2)$ | $\log n$ | Binary search | $\Theta(\log n)$ |
+| **Root** | $T(\sqrt{n})$ | $\log \log n$ | Special cases | $\Theta(\log \log n)$ |
+
+---
+
+### Real-World Applications
+
+**Where you see root recurrences:**
+
+1. **Interpolation search** (optimistic case)
+2. **Van Emde Boas trees** (data structure)
+3. **Integer algorithms** (repeated square rooting)
+4. **Some geometric algorithms** with hierarchical decomposition
+
+Not as common as dividing recurrences, but they appear in advanced data structures.
+
+---
+
+### Final Summary — What Abdul Bari Wants You to Take Away
+
+1. **Root recurrences shrink input very fast**
+2. **They create $\log \log n$ depth**
+3. **Convert them using $n = 2^k$**
+4. **Analyze level-by-level**
+5. **Don't blindly apply Master Theorem**
+
+**Complete example workflow:**
+
+```
+Given: T(n) = T(√n) + log n
+
+Step 1: Let n = 2^k
+        T(2^k) = T(2^(k/2)) + k
+
+Step 2: Let S(k) = T(2^k)
+        S(k) = S(k/2) + k
+
+Step 3: This is like T(n) = T(n/2) + n
+        We know: T(n) = Θ(n)
+
+Step 4: So S(k) = Θ(k)
+        Therefore T(2^k) = Θ(k)
+        Therefore T(n) = Θ(log n)
+```
+
+---
+
 ## Abdul Bari's Core Intuition (THIS IS GOLD)
 
 1. **Tree height** = $\log n$
@@ -910,6 +1153,9 @@ This is your **one-stop reference** for Abdul Bari's Recurrence Relations course
 | **Dividing-2, Const** | $T(n)=2T(n/2)+1$ | Two calls, n halves, constant work | $\Theta(n)$ | Complete binary tree traversal |
 | **Dividing-2, Linear** | $T(n)=2T(n/2)+n$ | Two calls, n halves, linear work | $\Theta(n \log n)$ | **Merge Sort** |
 | **Dividing-2, Quadratic** | $T(n)=2T(n/2)+n^2$ | Two calls, n halves, quadratic work | $\Theta(n^2)$ | Matrix multiply (naive) |
+| **Root, Const** | $T(n)=T(\sqrt{n})+1$ | One call, n reduces to √n, constant work | $\Theta(\log \log n)$ | Van Emde Boas trees |
+| **Root, Linear** | $T(n)=T(\sqrt{n})+n$ | One call, n reduces to √n, linear work | $\Theta(n \log \log n)$ | Interpolation search |
+| **Root, Root** | $T(n)=T(\sqrt{n})+\sqrt{n}$ | One call, n reduces to √n, √n work | $\Theta(n)$ | Special cases |
 
 ---
 
@@ -917,9 +1163,10 @@ This is your **one-stop reference** for Abdul Bari's Recurrence Relations course
 
 **Everything boils down to:**
 
-1. **Is it decreasing (n-1) or dividing (n/b)?**
+1. **Is it decreasing (n-1), dividing (n/b), or root (√n)?**
    - Decreasing → exponential or polynomial time
    - Dividing → logarithmic or polynomial time
+   - Root → log-log time (VERY fast!)
 
 2. **How much extra work f(n)?**
    - Constant (1) → depends on recursion structure
@@ -1117,17 +1364,71 @@ Total: n² + n²/2 + n²/4 + ... ≈ 2n²
 
 ---
 
+### **Lecture 394: Master Theorem for Root Functions** ⭐⭐
+
+**THE FINAL RECURRENCE TYPE: SQUARE ROOT REDUCTION**
+
+This lecture teaches the **third family** of recurrences that standard Master Theorem doesn't cover.
+
+**The Problem:**
+$$T(n) = T(\sqrt{n}) + f(n)$$
+
+This is **NOT** $T(n/2)$ — it's square root!
+
+**Why it's different:**
+- Dividing: $n \to n/2 \to n/4 \to n/8$ (depth = $\log n$)
+- Root: $n \to \sqrt{n} \to \sqrt{\sqrt{n}}$ (depth = $\log \log n$)
+
+Root collapses **MUCH faster**!
+
+**The Core Trick (Abdo's transformation):**
+
+1. **Substitute:** Let $n = 2^k$
+2. **Define:** $S(k) = T(2^k)$
+3. **Convert:** $T(\sqrt{n})$ becomes $S(k/2)$
+4. **Solve:** Now it looks like a dividing recurrence
+5. **Substitute back:** $k = \log n$
+
+**Example 1:** $T(n) = T(\sqrt{n}) + 1$
+- Convert: $S(k) = S(k/2) + 1$
+- Solve: $S(k) = \Theta(\log k)$
+- Back: $T(n) = \Theta(\log \log n)$ ⭐
+
+**Example 2:** $T(n) = T(\sqrt{n}) + n$
+- Depth: $\log \log n$
+- Work per level: $\approx n$
+- Result: $T(n) = \Theta(n \log \log n)$
+
+**Example 3:** $T(n) = T(\sqrt{n}) + \sqrt{n}$
+- Work decreases: $n + \sqrt{n} + \sqrt[4]{n} + \dots$
+- Converges: $T(n) = \Theta(n)$
+
+**Key memory rule:**
+> "If the recurrence has √n, the depth is log log n."
+
+**Real applications:**
+- Van Emde Boas trees
+- Interpolation search (optimistic)
+- Integer algorithms with square rooting
+
+**Why it matters:**
+- Favorite exam trap
+- Shows up in advanced data structures
+- Demonstrates how different reductions create different complexities
+
+---
+
 ## 🚀 Exam Strategy: Decision Tree
 
 ```
 YOU SEE A RECURRENCE
 
 ↓
-Step 1: Write it as T(n) = aT(n/b) + f(n)
+Step 1: Write it as T(n) = aT(n/b) + f(n) or T(√n) + f(n)
         Identify a, b, and f(n)
 
 ↓
-Step 2: Is it DECREASING (b=1) or DIVIDING (b>1)?
+Step 2: Is it DECREASING (b=1), DIVIDING (b>1), or ROOT (√n)?
 
 ├─ DECREASING (n-1):
 │  ├─ If a=1: Total is sum of f(n)
@@ -1137,11 +1438,20 @@ Step 2: Is it DECREASING (b=1) or DIVIDING (b>1)?
 │  └─ If a>1: EXPONENTIAL
 │     • T(n) = Θ(a^n) → AVOID!
 │
-└─ DIVIDING (n/b, b>1):
-   └─ Apply MASTER THEOREM:
-      1. Calculate log_b(a)
-      2. Compare f(n) with n^(log_b a)
-      3. Use Case 1, 2, or 3
+├─ DIVIDING (n/b, b>1):
+│  └─ Apply MASTER THEOREM:
+│     1. Calculate log_b(a)
+│     2. Compare f(n) with n^(log_b a)
+│     3. Use Case 1, 2, or 3
+│
+└─ ROOT (√n):
+   └─ Use SUBSTITUTION METHOD:
+      1. Let n = 2^k, define S(k) = T(2^k)
+      2. Convert to dividing recurrence
+      3. Solve for S(k)
+      4. Substitute back k = log n
+      • Depth is log log n (VERY shallow!)
+      • Example: T(√n) + 1 → Θ(log log n)
 ```
 
 ---
@@ -1163,6 +1473,10 @@ Step 2: Is it DECREASING (b=1) or DIVIDING (b>1)?
 | T(n) = 4T(n/2) + n | Four calls, halving, linear | n² |
 | T(n) = 4T(n/2) + n² | Four calls, halving, quadratic | n² log n |
 | T(n) = aT(n/b) + ... | General divide-and-conquer | **USE MASTER THEOREM** |
+| T(n) = T(√n) + O(1) | Root reduction, constant work | **log log n** |
+| T(n) = T(√n) + n | Root reduction, linear work | **n log log n** |
+| T(n) = T(√n) + √n | Root reduction, root work | **n** |
+| T(n) = T(√n) + ... | General root reduction | **USE SUBSTITUTION (n=2^k)** |
 
 ---
 
@@ -1196,6 +1510,11 @@ Step 2: Is it DECREASING (b=1) or DIVIDING (b>1)?
    - **ABDO'S GOLDEN METHOD**
    - This solves almost everything
 
+8. **"If the recurrence has √n, the height is log log n."**
+   - About: Root functions T(√n)
+   - Why: Square root collapses MUCH faster than division
+   - Method: Use substitution n = 2^k to convert to dividing form
+
 ---
 
 ## 🎓 Real Algorithms & Their Recurrences
@@ -1210,6 +1529,8 @@ Step 2: Is it DECREASING (b=1) or DIVIDING (b>1)?
 | Matrix Multiply (naive) | T(n)=8T(n/2)+n² | O(n³) | 391 |
 | Strassen's Multiply | T(n)=7T(n/2)+n² | O(n^2.81) | 392 |
 | Complete Binary Tree | T(n)=2T(n/2)+1 | O(n) | 388 |
+| Van Emde Boas Tree | T(n)=T(√n)+1 | O(log log n) | 394 |
+| Interpolation Search | T(n)=T(√n)+n | O(n log log n) | 394 |
 
 ---
 
@@ -1243,6 +1564,11 @@ Step 2: Is it DECREASING (b=1) or DIVIDING (b>1)?
    - These are the standard references
    - Know them cold
 
+8. **Treating √n like n/2**
+   - √n creates log log n depth, NOT log n
+   - Root functions need substitution method
+   - Don't apply Master Theorem directly!
+
 ---
 
 ## 📋 Quick Diagnosis: What's My Time Complexity?
@@ -1256,6 +1582,7 @@ Step 2: Is it DECREASING (b=1) or DIVIDING (b>1)?
 Is reduction (n-1)?
   Yes → Go to "Decreasing"
   No  → Is it (n/b)? Go to "Dividing"
+        Is it √n? Go to "Root"
 
 DECREASING (n-1):
   How many calls (a)?
@@ -1265,6 +1592,11 @@ DECREASING (n-1):
 DIVIDING (n/b):
   Apply Master Theorem
   Compare f(n) with n^(log_b a)
+
+ROOT (√n):
+  Use Substitution Method
+  Let n = 2^k, solve for S(k)
+  Depth is log log n
 ```
 
 **Step 3: Verify**
@@ -1306,11 +1638,12 @@ Just before the exam, remember:
 
 1. **Decreasing by 1?** → Usually polynomial or exponential
 2. **Dividing by constant?** → Use Master Theorem
-3. **Unsure?** → Draw recursion tree for small n
-4. **Check answer against real algorithms** → Does it match Merge Sort, Binary Search, etc.?
+3. **Square root (√n)?** → Use substitution n=2^k, depth is log log n
+4. **Unsure?** → Draw recursion tree for small n
+5. **Check answer against real algorithms** → Does it match Merge Sort, Binary Search, etc.?
 
 ---
 
-**Created for Abdul Bari's Recurrence Relations lectures**
+**Created for Abdul Bari's Recurrence Relations lectures (383-394)**
 **Complete reference for mastering divide-and-conquer analysis**
 
