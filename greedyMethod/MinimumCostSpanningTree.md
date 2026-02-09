@@ -12,6 +12,27 @@ This single insight teaches **when greedy algorithms are guaranteed to work** an
 
 ## Part 1: The Problem First — Before Any Algorithm
 
+### What You're Given (Inputs)
+
+When Abdo presents an MST problem, you start with:
+
+1. **A connected graph** — vertices and edges already exist
+2. **Edge weights** — each edge has a numerical cost/weight/distance
+3. **Vertices** — labeled (A, B, C, D, ...)
+
+**These are all INPUTS. You don't create them.**
+
+### What You Must Find (Output)
+
+Your task is to:
+
+1. **Select V-1 edges** from the given edges
+2. **Minimize total weight** (sum of selected edge weights)
+3. **Ensure connectivity** (all vertices reachable)
+4. **Avoid cycles** (tree structure)
+
+**Your output:** Which edges to select and their total weight.
+
 ### Abdo Always Starts With the Problem
 
 Abdo does **NOT** begin with Kruskal's algorithm.
@@ -28,11 +49,11 @@ WITHOUT creating cycles?
 **Key word emphasis:**
 
 - ✅ **All vertices** must be connected
-- ✅ **Minimum** total weight
+- ✅ **Minimum** total weight (sum of edge weights you select)
 - ✅ **No cycles** (must be a tree)
 - ✅ **Exactly (V-1) edges** for V vertices
 
-This is an **optimization problem on graphs** — not just algorithm memorization.
+This is an **optimization problem on graphs** — minimizing a sum of given values.
 
 ### Why Abdo Drills These Words
 
@@ -46,6 +67,8 @@ If your algorithm produces:
   
 But is total weight minimum? THAT'S what algorithm optimizes.
 ```
+
+**The algorithm doesn't calculate weights. It SELECTS among given weights.**
 
 ---
 
@@ -248,6 +271,115 @@ This matters because Kruskal's algorithm ensures we end up with **one connected 
 
 ---
 
+## Part 5B: Critical Clarification — Where Do The Edge Weights Come From?
+
+### This Confuses Many Students
+
+When you see Kruskal examples like:
+
+```
+A ---10--- B
+B ---28--- C
+A ---15--- C
+C ---20--- D
+```
+
+**Question:** Where do the numbers 10, 28, 15, 20 come from?
+
+**Answer:** They are GIVEN inputs to the problem, not calculated by the algorithm!
+
+### Edge Weights Are Inputs, Not Outputs
+
+**Critical distinction:**
+
+```
+❌ WRONG: "Kruskal calculates edge costs"
+✅ RIGHT: "Kruskal uses given edge costs to choose edges"
+```
+
+### Real-World Meaning of Edge Weights
+
+These numbers represent **real quantities:**
+
+```
+In network design:
+  10, 28, 15, 20 → Distance between nodes (in km)
+  
+In electrical grids:
+  10, 28, 15, 20 → Cost of laying cable (in $/meter)
+
+In airline networks:
+  10, 28, 15, 20 → Flight time (in minutes)
+  
+In resource allocation:
+  10, 28, 15, 20 → Cost to establish connection (in dollars)
+```
+
+**You are given these weights. Your job is to choose which edges to include.**
+
+### What Kruskal Actually Does
+
+```
+Given:
+  - A graph with V vertices
+  - E edges, each with a WEIGHT (given)
+
+Task:
+  - Select V-1 edges
+  - Minimize total weight
+  - Ensure no cycles (tree structure)
+  - Ensure connectivity (all vertices included)
+
+Kruskal's process:
+  1. Take the given weights
+  2. Sort edges by their given weights
+  3. Pick edges in order of increasing weight
+  4. Skip edges that would create cycles
+  5. Stop when you have V-1 edges
+```
+
+**Key point:** Kruskal never CALCULATES weights. It only SELECTS among given weights.
+
+### Why Abdo Chooses Specific Numbers
+
+Pedagogical design:
+
+```
+Example:
+  A-B: 10  (cheapest)
+  A-C: 15  (second cheapest)
+  C-D: 20  (third)
+  B-C: 28  (expensive)
+
+Design goal:
+  - 10 is obviously good (take it)
+  - 15 looks good, but should it be next? (depends on structure)
+  - 28 is expensive (avoid if possible)
+
+The numbers are crafted so students must think about:
+  ✓ Sorting (obvious first step)
+  ✓ Cycle detection (non-obvious second step)
+  ✓ Trade-offs (sometimes skip cheaper edge to avoid cycle)
+```
+
+### Common Student Confusion
+
+**Wrong assumption:**
+```
+"Kruskal picks the V-1 cheapest edges"
+
+This FAILS if those edges create cycles!
+```
+
+**Correct understanding:**
+```
+"Kruskal picks edges by increasing weight,
+ SKIPPING any that would create a cycle,
+ until it has V-1 edges"
+```
+
+---
+
 ## Part 6: Kruskal's Algorithm — The Greedy Strategy
 
 ### The Core Idea
@@ -341,43 +473,50 @@ For each edge (u,v):
 ### Example Trace
 
 ```
-Graph:      Edges (with weights):
-  A---2---B    A-B: 2
-  |       |    A-C: 3
-  3       4    B-C: 4
-  |       |    B-D: 5
-  C---1---D    C-D: 1
+Graph:      Edges (with GIVEN weights):
+  A---2---B    A-B: 2        ← These weights are INPUTS
+  |       |    A-C: 3        ← You don't calculate them
+  3       4    B-C: 4        ← They are part of the problem
+  |       |    B-D: 5        ← Your job is to choose which edges
+  C---1---D    C-D: 1        ← to include (respecting cycles)
 
 Sorted edges: C-D(1), A-B(2), A-C(3), B-C(4), B-D(5)
+              (sorting by given weights, ascending)
 
 Initial sets: {A}, {B}, {C}, {D}
 
-Step 1: Edge C-D (weight 1)
+Step 1: Edge C-D (given weight = 1)
   Find(C)={C}, Find(D)={D}  → Different ✓
   Add C-D to MST
   Union: {A}, {B}, {C,D}
+  Cost so far: 1
 
-Step 2: Edge A-B (weight 2)
+Step 2: Edge A-B (given weight = 2)
   Find(A)={A}, Find(B)={B}  → Different ✓
   Add A-B to MST
   Union: {A,B}, {C,D}
+  Cost so far: 1+2 = 3
 
-Step 3: Edge A-C (weight 3)
+Step 3: Edge A-C (given weight = 3)
   Find(A)={A,B}, Find(C)={C,D}  → Different ✓
   Add A-C to MST
   Union: {A,B,C,D}
   (All vertices now connected!)
+  Cost so far: 3+3 = 6
 
-Step 4: Edge B-C (weight 4)
+Step 4: Edge B-C (given weight = 4)
   Find(B)={A,B,C,D}, Find(C)={A,B,C,D}  → SAME ✗
   Skip (would create cycle)
+  Cost unchanged: 6
 
-Step 5: Edge B-D (weight 5)
+Step 5: Edge B-D (given weight = 5)
   Find(B)={A,B,C,D}, Find(D)={A,B,C,D}  → SAME ✗
   Skip (would create cycle)
+  Cost unchanged: 6
 
+FINAL RESULT:
 MST edges selected: C-D(1), A-B(2), A-C(3)
-Total weight: 1+2+3 = 6
+Total weight: 1+2+3 = 6  ← Sum of GIVEN weights
 
 MST structure:
   A---2---B
@@ -386,6 +525,13 @@ MST structure:
   |
   C---1---D
 ```
+
+**What just happened:**
+- We started with 5 edges (given weights: 1, 2, 3, 4, 5)
+- We selected 3 edges (V-1 for V=4)
+- We chose them by sorting and cycle-checking
+- The total weight is the SUM of the selected edges' given weights
+- Kruskal didn't CALCULATE 6; it SUMMED the weights it selected
 
 ---
 
@@ -794,6 +940,8 @@ This teaches: **Multiple valid algorithmic approaches can solve the same problem
 | Concept | Remember |
 |---------|----------|
 | **Spanning Tree** | V vertices, V-1 edges, connected, no cycles |
+| **Edge Weights** | GIVEN as inputs (distances, costs, times, etc.) |
+| **Total Weight** | SUM of the weights of selected edges |
 | **Minimum MST** | Spanning tree with minimum total edge weight |
 | **Greedy Strategy** | Pick cheapest edge that avoids cycles |
 | **Cycle Check** | Use Union-Find, not DFS |
@@ -802,6 +950,7 @@ This teaches: **Multiple valid algorithmic approaches can solve the same problem
 | **Kruskal Best For** | Sparse graphs, easy implementation |
 | **Prim Best For** | Dense graphs, vertex-centric problems |
 | **Correctness** | Provable via exchange argument |
+| **Algorithm's job** | SELECT from given weights, not CALCULATE them |
 
 ---
 
