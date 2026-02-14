@@ -1,6 +1,7 @@
 # N-Queens Problem — Backtracking & Constraint Satisfaction
 
-> **Core Insight**: This lecture isn't about solving a chess puzzle. It's about teaching **constraint-based backtracking, efficient state representation, and how to prune search space using mathematical insight**. You discover how **one clever observation (place one queen per column) transforms the problem completely**.
+> **Core Insight**: This lecture isn't about solving a chess puzzle. It's about teaching 
+**constraint-based backtracking, efficient state representation, and how to prune search space using mathematical insight**. You discover how **one clever observation (place one queen per column) transforms the problem completely**.
 
 ---
 
