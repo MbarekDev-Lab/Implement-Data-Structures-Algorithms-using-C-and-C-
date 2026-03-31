@@ -249,13 +249,13 @@ int main()
     │  Char  │   Type   │          Operation              │
     ├────────┼──────────┼─────────────────────────────────┤
     │   4    │ Operand  │ Push 4 to stack                 │
-    │   6    │ Operand  │ Push 6 to stack               │
-    │   +    │ Operator │ 4 + 6 = 10                     │
-    │   2    │ Operand  │ Push 2 to stack               │
-    │   /    │ Operator │ 10 / 2 = 5                     │
-    │   5    │ Operand  │ Push 5 to stack               │
-    │   *    │ Operator │ 5 * 5 = 25                    │
-    │   7    │ Operand  │ Push 7 to stack               │
+    │   6    │ Operand  │ Push 6 to stack                 │
+    │   +    │ Operator │ 4 + 6 = 10                      │
+    │   2    │ Operand  │ Push 2 to stack                 │
+    │   /    │ Operator │ 10 / 2 = 5                      │
+    │   5    │ Operand  │ Push 5 to stack                 │
+    │   *    │ Operator │ 5 * 5 = 25                      │
+    │   7    │ Operand  │ Push 7 to stack                 │
     │   +    │ Operator │ 25 + 7 = 32                     │
     └────────┴──────────┴─────────────────────────────────┘
 
